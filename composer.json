@@ -1,0 +1,44 @@
+{
+	"name" : "inanepain/db",
+	"description" : "Some helpers for database task and query construction.",
+	"type" : "library",
+	"license" : "UNLICENSE",
+	"authors" : [{
+			"name" : "Philip Michael Raab",
+			"email" : "peep@inane.co.za",
+			"role" : "Developer"
+		}
+	],
+	"homepage" : "http://inane.co.za",
+	"readme": "README.md",
+	"support" : {
+		"email" : "peep@inane.co.za",
+		"issues" : "http://inane.co.za"
+	},
+	"keywords" : [
+		"inane",
+		"db",
+		"database",
+		"sql",
+		"query",
+		"builder",
+		"MySQL",
+		"PostgresSQL"
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Inane\\Db\\" : "src/"
+		}
+	},
+	"config": {
+        "preferred-install" : "dist",
+		"optimize-autoloader" : true,
+		"discard-changes" : true,
+		"sort-packages": true
+    },
+	"require" : {
+		"php" : ">=8.1"
+	},
+	"require-dev": {
+    }
+}
