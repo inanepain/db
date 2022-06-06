@@ -34,6 +34,11 @@ use const null;
  * This Concrete Builder can build SQL queries compatible with MySQL.
  */
 class MysqlQueryBuilder implements SQLQueryBuilderInterface {
+    /**
+     * Stores the various query parts
+     *
+     * @var \ArrayObject
+     */
     protected ArrayObject $query;
 
     public function __construct() {
