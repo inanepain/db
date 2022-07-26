@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * Inane: Db
+ *
+ * Inane Database
+ *
+ * PHP version 8.1
+ *
+ * @author Philip Michael Raab<peep@inane.co.za>
+ * @package Inane\Db
+ *
+ * @license UNLICENSE
+ * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
+ */
+
+declare(strict_types=1);
+
+namespace Inane\Db\Sql;
+
+use Stringable;
+
+/**
+ * WhereClause
+ *
+ * @version 1.0.0
+ */
+class WhereClause implements Stringable {
+    /**
+     * WhereClause constructor
+     *
+     * @param string $field field
+     * @param string|int $value value
+     * @param string $operator operator
+     *
+     * @return void
+     */
+    public function __construct(
+        protected string $field,
+        protected string|int $value,
+        protected string $operator = '=',
+    ) {
+    }
+
+    public function __invoke(): string {
+        return "{$this}";
+    }
+
+    /**
+     * Create WhereClause from array
+     *
+     * @param array $where where properties
+     *
+     * @return static where clause
+     */
+    public static function fromArray(array $where): static {
+        return new static(...$where);
+    }
+
+    /**
+     * SQL where as string
+     *
+     * @return string where clause
+     */
+    public function __toString(): string {
+        $quote = is_int($this->value) ? '' : "'";
+        return "$this->field $this->operator $quote$this->value$quote";
+    }
+
+    /**
+     * Export as array
+     *
+     * @return array where properties
+     */
+    public function export(): array {
+        return [
+            'field' => $this->field,
+            'value' => $this->value,
+            'operator' => $this->operator,
+        ];
+    }
+
+    /**
+     * Get Field
+     *
+     * @return string field
+     */
+    public function getField(): string {
+        return $this->field;
+    }
+    /**
+     * Set Field
+     *
+     * @param string $field field
+     *
+     * @return \Inane\Db\Sql\WhereClause
+     */
+    public function setField(string $field): self {
+        $this->field = $field;
+        return $this;
+    }
+
+    /**
+     * Get Value
+     *
+     * @return string|int value
+     */
+    public function getValue(): string|int {
+        return $this->value;
+    }
+    /**
+     * Set Value
+     *
+     * @param string|int $value value
+     *
+     * @return \Inane\Db\Sql\WhereClause
+     */
+    public function setValue(string|int $value): self {
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * Get Operator
+     *
+     * @return string Operator
+     */
+    public function getOperator(): string {
+        return $this->operator;
+    }
+    /**
+     * Set Operator
+     *
+     * @param string $operator operator
+     *
+     * @return \Inane\Db\Sql\WhereClause
+     */
+    public function setOperator(string $operator = '='): self {
+        $this->operator = $operator;
+        return $this;
+    }
+}

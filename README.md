@@ -1,5 +1,7 @@
 # Readme: Db
 
+> $Id$ ($Date$)
+
 Some helpers for database task and query construction.
 
 **Contents:**

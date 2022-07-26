@@ -8,17 +8,20 @@
  * PHP version 8.1
  *
  * @author Philip Michael Raab<peep@inane.co.za>
- * @package Inane\Stdlib
+ * @package Inane\Db
  *
  * @license UNLICENSE
  * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);
 
-namespace Inane\Db;
+namespace Inane\Db\Sql;
 
-use ArrayObject;
+use Inane\Stdlib\Options;
 
 use function serialize;
 use function unserialize;
@@ -33,9 +36,9 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
     /**
      * Stores the various query parts
      *
-     * @var \ArrayObject
+     * @var \Inane\Stdlib\Options
      */
-    protected ArrayObject $queryProperties;
+    protected Options $queryProperties;
 
     /**
      * SQLQueryBuilder constructor
@@ -54,7 +57,7 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
      * @return void
      */
     protected function reset(?string $serialised = null): void {
-        $this->queryProperties = $serialised ? unserialize($serialised) : new ArrayObject(['where' => []], ArrayObject::ARRAY_AS_PROPS);
+        $this->queryProperties = $serialised ? unserialize($serialised) : new Options(['where' => []]);
     }
 
     /**
@@ -65,11 +68,12 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
      *
      * @return \Inane\Db\SQLQueryBuilderInterface
      */
-    public function select(string $table, array $fields): SQLQueryBuilderInterface {
+    public function select(string $table, array $fields = []): SQLQueryBuilderInterface {
         $this->queryProperties->select = [
             'table' => $table,
             'fields' => $fields
         ];
+        $this->queryProperties->type = 'select';
 
         return $this;
     }
@@ -96,14 +100,14 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
     /**
      * Limit query response
      *
-     * @param int $start
+     * @param int $limit
      * @param null|int $offset
      *
      * @return \Inane\Db\SQLQueryBuilderInterface
      */
-    public function limit(int $start, ?int $offset = null): SQLQueryBuilderInterface {
+    public function limit(int $limit, ?int $offset = null): SQLQueryBuilderInterface {
         $this->queryProperties->limit = [
-            'start' => $start,
+            'limit' => $limit,
             'offset' => $offset,
         ];
 
@@ -127,12 +131,12 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
      * @return string
      */
     public function getSQLFor(SQLQueryBuilderInterface $QueryBuilder): string {
-        $QueryBuilder->select(...$this->queryProperties->select);
+        $QueryBuilder->select(...$this->queryProperties->select->toArray());
 
         foreach ($this->queryProperties->where as $where)
             $QueryBuilder->where(...$where);
 
-        $QueryBuilder->limit(...$this->queryProperties->limit);
+        $QueryBuilder->limit(...$this->queryProperties->limit->toArray());
 
         return $QueryBuilder->getSQL();
     }

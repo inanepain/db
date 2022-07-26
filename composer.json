@@ -9,7 +9,7 @@
 			"role" : "Developer"
 		}
 	],
-	"homepage" : "http://inane.co.za",
+	"homepage" : "http://vaieen.local:8000/inane/db",
 	"readme": "README.md",
 	"support" : {
 		"email" : "peep@inane.co.za",
@@ -37,7 +37,8 @@
 		"sort-packages": true
     },
 	"require" : {
-		"php" : ">=8.1"
+		"php" : ">=8.1",
+		"inanepain/stdlib": "* || dev-master || dev-develop"
 	},
 	"require-dev": {
     }
