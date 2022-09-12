@@ -1,45 +1,46 @@
 {
-	"name" : "inanepain/db",
-	"description" : "Some helpers for database task and query construction.",
-	"type" : "library",
-	"license" : "UNLICENSE",
-	"authors" : [{
-			"name" : "Philip Michael Raab",
-			"email" : "peep@inane.co.za",
-			"role" : "Developer"
-		}
-	],
-	"homepage" : "http://vaieen.local:8000/inane/db",
-	"readme": "README.md",
-	"support" : {
-		"email" : "peep@inane.co.za",
-		"issues" : "http://inane.co.za"
-	},
-	"keywords" : [
-		"inane",
-		"db",
-		"database",
-		"sql",
-		"query",
-		"builder",
-		"MySQL",
-		"PostgresSQL"
-	],
-	"autoload" : {
-		"psr-4" : {
-			"Inane\\Db\\" : "src/"
-		}
-	},
-	"config": {
-        "preferred-install" : "dist",
-		"optimize-autoloader" : true,
-		"discard-changes" : true,
-		"sort-packages": true
+    "name": "inanepain/db",
+    "description": "Some helpers for database task and query construction.",
+    "type": "library",
+    "license": "UNLICENSE",
+    "homepage": "http://vaieen.local:3000/inane/db",
+    "readme": "README.md",
+    "authors": [
+        {
+            "name": "Philip Michael Raab",
+            "email": "peep@inane.co.za",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "peep@inane.co.za",
+        "issues": "http://vaieen.local:3000/iane"
     },
-	"require" : {
-		"php" : ">=8.1",
-		"inanepain/stdlib": "* || dev-master || dev-develop"
-	},
-	"require-dev": {
-    }
+    "keywords": [
+        "inane",
+        "db",
+        "database",
+        "sql",
+        "query",
+        "builder",
+        "MySQL",
+        "PostgresSQL"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Inane\\Db\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "discard-changes": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.1",
+        "inanepain/stdlib": "* || dev-master || dev-develop"
+    },
+    "require-dev": {}
 }
