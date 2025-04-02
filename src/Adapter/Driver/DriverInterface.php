@@ -7,7 +7,7 @@
  *
  * PHP version 8.1
  *
- * @author Philip Michael Raab<peep@inane.co.za>
+ * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package Inane\Db
  *
  * @license UNLICENSE
@@ -19,13 +19,13 @@
 
 declare(strict_types=1);
 
-namespace Inane\Db\Adapter;
+namespace Inane\Db\Adapter\Driver;
 
 /**
- * SQLite connection
+ * Driver Interface
  *
  * @version 1.0.0
  */
-class SQLiteAdapter extends Adapter {
+interface DriverInterface {
 
 }

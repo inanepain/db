@@ -19,15 +19,17 @@
 
 declare(strict_types=1);
 
-namespace Inane\Db\Adapter;
+namespace Inane\Db\Adapter\Driver;
 
-use Inane\Db\Adapter\Driver\DriverInterface;
+use PDO;
 
 /**
- * Adapter Interface
+ * AbstractDriver
  *
  * @version 1.0.0
  */
-interface AdapterInterface {
-    public function getDriver(): DriverInterface;
+abstract class AbstractDriver extends PDO implements DriverInterface {
+    public function __construct(string $dsn, ?string $username = null, ?string $password = null) {
+        parent::__construct($dsn, $username, $password);
+    } // __construct
 }
