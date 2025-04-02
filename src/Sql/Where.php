@@ -39,13 +39,27 @@ class Where implements Stringable {
      */
     protected array $whereClauses = [];
 
-    public function __construct(array $where = []) {
-        foreach($where as $w)
-            if (is_array($w)) $this->addWhere(...$w);
-            else if ($w instanceof WhereClause) $this->addWhereClause($w);
+    /**
+     * Constructor for the Where class.
+     *
+     * @param array|array[]|string[] $wheres An optional array of conditions to initialize the Where object with.
+     */
+    public function __construct(array $wheres = []) {
+        foreach($wheres as $where)
+            if (is_array($where)) $this->addWhere(...$where);
+            else if ($where instanceof WhereClause) $this->addWhereClause($where);
     }
 
-    public function addWhere(string $field, string|int $value, string $operator = '='): self {
+    /**
+     * Adds a WHERE condition to the SQL query.
+     *
+     * @param string $field The name of the field to apply the condition on.
+     * @param string|int $value The value to compare the field against.
+     * @param string|Operator $operator The comparison operator to use (default is '=').
+     *
+     * @return self Returns the current instance for method chaining.
+     */
+    public function addWhere(string $field, string|int $value, string|Operator $operator = '='): self {
         return $this->addWhereClause(new WhereClause($field, $value, $operator));
     }
 

@@ -74,6 +74,8 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
             'fields' => $fields
         ];
         $this->queryProperties->type = 'select';
+        $this->queryProperties->table = 'table';
+        $this->queryProperties->fields = $fields;
 
         return $this;
     }
@@ -83,11 +85,11 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
      *
      * @param string $field
      * @param string|int $value
-     * @param string $operator
+     * @param string|Operator $operator
      *
      * @return \Inane\Db\SQLQueryBuilderInterface
      */
-    public function where(string $field, string|int $value, string $operator = '='): SQLQueryBuilderInterface {
+    public function where(string $field, string|int $value, string|Operator $operator = '='): SQLQueryBuilderInterface {
         $this->queryProperties->where[] = [
             'field' => $field,
             'value' => $value,
