@@ -21,13 +21,15 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
+use Inane\Stdlib\Options;
+
 /**
  * SqliteDriver
  *
  * @version 1.0.0
  */
 class SqliteDriver extends AbstractDriver {
-    public function __construct(array $config = []) {
+    public function __construct(array|Options $config = []) {
         $dsn = 'sqlite:' . $config['dbname'];
 
         parent::__construct($dsn);

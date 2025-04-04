@@ -21,10 +21,12 @@ declare(strict_types=1);
 
 namespace Inane\Db\Table;
 
-use Inane\Db\Adapter\Adapter;
-use Inane\Db\Adapter\AdapterInterface;
 use Inane\Db\Entity\AbstractEntity;
 use PDO;
+use Inane\Db\Adapter\{
+    Adapter,
+    AdapterInterface
+};
 
 use function array_key_exists;
 use function array_keys;
@@ -78,11 +80,15 @@ abstract class AbstractTable {
         if (!isset(static::$db) && $config !== null) {
             static::$db = new Adapter($config);
         }
-        // $this->db = new PDO('sqlite:data\yts-data.db');
     }
 
     #region database table methods
 
+    /**
+     * Retrieves the primary ID of the table.
+     *
+     * @return string The primary ID as a string.
+     */
     public function getPrimaryId() : string {
         return $this->primaryId;
     }

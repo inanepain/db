@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Inane\Db\Entity;
 
 use Exception;
+use Inane\Db\Table\AbstractTable;
 use Stringable;
 use Inane\Stdlib\{
     Converters\Arrayable,
