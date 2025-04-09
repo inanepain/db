@@ -2,7 +2,7 @@
 
 > $Id$ ($Date$)
 
-Some helpers for database task and query construction.
+Some helpers for database tasks and query construction and now also includes classes for a database abstraction layer.
 
 **Contents:**
 
@@ -17,6 +17,8 @@ Some helpers for database task and query construction.
 `composer require inanepain/db`
 
 ## Usage
+
+### SQLQueryBuilder
 
 ```php
 $qb = new SQLQueryBuilder();

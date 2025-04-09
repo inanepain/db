@@ -2,7 +2,7 @@
     "name": "inanepain/db",
     "description": "Some helpers for database task and query construction.",
     "type": "library",
-    "license": "UNLICENSE",
+    "license": "Unlicense",
     "homepage": "https://github.com/inanepain/db",
     "readme": "README.md",
     "authors": [
