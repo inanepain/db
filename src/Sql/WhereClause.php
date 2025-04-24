@@ -41,7 +41,7 @@ class WhereClause implements Stringable {
     public function __construct(
         protected string $field,
         protected string|int $value,
-        protected string $operator = '=',
+        protected string|Operator $operator = '=',
     ) {
     }
 
@@ -126,19 +126,19 @@ class WhereClause implements Stringable {
     /**
      * Get Operator
      *
-     * @return string Operator
+     * @return string|Operator Operator
      */
-    public function getOperator(): string {
+    public function getOperator(): string|Operator {
         return $this->operator;
     }
     /**
      * Set Operator
      *
-     * @param string $operator operator
+     * @param string|Operator $operator operator
      *
      * @return \Inane\Db\Sql\WhereClause
      */
-    public function setOperator(string $operator = '='): self {
+    public function setOperator(string|Operator $operator = '='): self {
         $this->operator = $operator;
         return $this;
     }

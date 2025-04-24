@@ -45,7 +45,7 @@ class SQLiteConnection implements ConnectionInterface {
      */
     public function connect(): self {
         if (!$this->isConnected())
-            $this->pdo = new \PDO('sqlite:' . Config::PATH_TO_SQLITE_FILE);
+            $this->pdo = new PDO('sqlite:' . Config::PATH_TO_SQLITE_FILE);
 
         return $this;
     }
