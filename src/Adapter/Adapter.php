@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Inane\Db\Adapter;
 
 use Inane\Db\Adapter\Driver\DriverInterface;
+use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
 /**
@@ -38,11 +39,11 @@ class Adapter implements AdapterInterface {
     /**
      * Constructor for the Adapter class.
      *
-     * @param array|Options $config Optional configuration settings for the adapter.
+     * @param array|Options|OptionsInterface $config Optional configuration settings for the adapter.
      *                       This array can include various parameters required
      *                       for initializing the adapter.
      */
-    public function __construct(array|Options $config = []) {
+    public function __construct(array|Options|OptionsInterface $config = []) {
         // Set the adapter to the appropriate class based on the driver
         if ($config['driver'] == 'sqlite') {
             $this->driver = new \Inane\Db\Adapter\Driver\SqliteDriver($config);

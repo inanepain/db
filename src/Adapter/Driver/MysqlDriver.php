@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
+use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
 use function array_intersect_key;
@@ -32,7 +33,7 @@ use function implode;
  * @version 1.0.0
  */
 class MysqlDriver extends AbstractDriver {
-    public function __construct(array|Options $config = []) {
+    public function __construct(array|Options|OptionsInterface $config = []) {
         $opts = array_intersect_key($config, ['dbname' => '', 'host' => '', 'port' => '', 'unix_socket' => '']);
 
         $dsn = [];
