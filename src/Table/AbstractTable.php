@@ -120,7 +120,10 @@ abstract class AbstractTable {
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute([':' . $this->primaryId => $id]);
-        return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this])[0] ?: false;
+
+        $result = $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+        if (empty($result)) return false;
+        else return $result[0];
     }
 
     /**

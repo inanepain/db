@@ -121,11 +121,13 @@ abstract class AbstractEntity implements Arrayable, Stringable {
      *
      * This method persists the current state of the entity to the database.
      * It returns a boolean indicating whether the save operation was successful.
+     * 
+     * @param bool $insert Force insert for tables without auto generated ids.
      *
      * @return bool True if the entity was successfully saved, false otherwise.
      */
-    public function save() : bool {
-        if ($this->getPrimaryIdValue() === null)
+    public function save(bool $insert = false) : bool {
+        if ($this->getPrimaryIdValue() === null || $insert)
             $result = $this->dataTable->insert($this);
         else
             $result = $this->dataTable->update($this);
