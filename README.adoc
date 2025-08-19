@@ -1,0 +1,83 @@
+= README: Inanepain/db
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Some helpers for database task and query construction.
+:keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
+:copyright: Unlicense
+:homepage: https://git.cathedral.co.za:3000/inanepain/db
+:revnumber: 0.3.0
+:revdate: 2025-xx-xx
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:sectanchors:
+:idprefix: topic-
+:idseparator: -
+:pkg-vendor: inanepain
+:pkg-name: db
+:pkg-id: {pkg-vendor}/{pkg-name}
+
+== image:./icon.png[title={pkg-id},25] {pkg-id}
+
+{description}
+
+<<<
+
+:leveloffset: +1
+
+= Install
+
+.composer
+[source,shell]
+====
+composer require {pkg-id}
+====
+
+:leveloffset!:
+
+<<<
+
+:leveloffset: +1
+
+= Usage
+
+== SQLQueryBuilder
+
+[source,php]
+----
+$qb = new SQLQueryBuilder();
+$query = $qb
+    ->select('users', ['name', 'email', 'password'])
+    ->where('age', 18, '>')
+    ->where('age', 30, '<')
+    ->limit(10, 20);
+
+echo "-- Testing MySQL query builder:\n";
+echo $qb->getSQLFor(new MysqlQueryBuilder());
+
+echo "\n\n";
+
+echo "-- Testing PostgresSQL query builder:\n";
+echo $qb->getSQLFor(new PostgresQueryBuilder());
+----
+
+Which should give you:
+
+[source,sql]
+----
+-- Testing MySQL query builder:
+SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10, 20;
+
+-- Testing PostgresSQL query builder:
+SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10 OFFSET 20;
+----
+
+:leveloffset!:
+
+<<<
+
+== Revision
+
+ version: $Id$ ($Date$)

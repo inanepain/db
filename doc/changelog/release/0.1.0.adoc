@@ -1,26 +1,17 @@
-= Changelog: inanepain/db
+= 0.1.0 (2022 Jul 22)
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Some helpers for database task and query construction.
 :keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
-:revnumber: 0.3.0
-:revdate: 2025-xx-xx
-:revremark: -dev
-:version-label: Unconfirmed
+:revnumber: 0.1.0
+:revdate: 2022-07-22
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
 :icons: font
 :source-highlighter: highlight.js
 :sectnums!:
-:toc: left
+:toc: auto
 :sectanchors:
 
-Version: $Id$ ($Date$)
-
-== History
-
-include::./release/0.0.0.adoc[leveloffset=+2]
-
-include::./release/0.2.0.adoc[leveloffset=+2]
-include::./release/0.1.0.adoc[leveloffset=+2]
+* initial release

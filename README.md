@@ -1,49 +1,40 @@
-# Readme: Db
+# ![icon](./icon.png) inanepain/db
 
-> $Id$ ($Date$)
+Some helpers for database task and query construction.
 
-Some helpers for database tasks and query construction and now also includes classes for a database abstraction layer.
+# Install
 
-**Contents:**
+composer
 
- - Parser\ObjectParser
- - ArrayUtil
- - Highlight
- - Icons
- - Options
+composer require inanepain/db
 
-## Install
+# Usage
 
-`composer require inanepain/db`
+## SQLQueryBuilder
 
-## Usage
+    $qb = new SQLQueryBuilder();
+    $query = $qb
+        ->select('users', ['name', 'email', 'password'])
+        ->where('age', 18, '>')
+        ->where('age', 30, '<')
+        ->limit(10, 20);
 
-### SQLQueryBuilder
+    echo "-- Testing MySQL query builder:\n";
+    echo $qb->getSQLFor(new MysqlQueryBuilder());
 
-```php
-$qb = new SQLQueryBuilder();
-$query = $qb
-    ->select('users', ['name', 'email', 'password'])
-    ->where('age', 18, '>')
-    ->where('age', 30, '<')
-    ->limit(10, 20);
+    echo "\n\n";
 
-
-echo "-- Testing MySQL query builder:\n";
-echo $qb->getSQLFor(new MysqlQueryBuilder());
-
-echo "\n\n";
-
-echo "-- Testing PostgresSQL query builder:\n";
-echo $qb->getSQLFor(new PostgresQueryBuilder());
-```
+    echo "-- Testing PostgresSQL query builder:\n";
+    echo $qb->getSQLFor(new PostgresQueryBuilder());
 
 Which should give you:
 
-```sql
--- Testing MySQL query builder:
-SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10, 20;
+    -- Testing MySQL query builder:
+    SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10, 20;
 
--- Testing PostgresSQL query builder:
-SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10 OFFSET 20;
-```
+    -- Testing PostgresSQL query builder:
+    SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10 OFFSET 20;
+
+# Revision
+
+    version: $Id$ ($Date$)

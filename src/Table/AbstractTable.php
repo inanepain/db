@@ -27,6 +27,7 @@ use Inane\Db\Adapter\{
     Adapter,
     AdapterInterface
 };
+use Inane\Stdlib\Array\OptionsInterface;
 
 use function array_key_exists;
 use function array_keys;
@@ -44,6 +45,8 @@ use const null;
  *
  * This class provides a base for all database table classes,
  * defining common functionality and structure.
+ * 
+ * // TODO: version bump
  */
 abstract class AbstractTable {
     /**
@@ -74,9 +77,9 @@ abstract class AbstractTable {
     /**
      * Constructor for the AbstractTable class.
      *
-     * @param array|null $config Optional array of data to initialize the entity.
+     * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
      */
-    public function __construct(?array $config = null) {
+    public function __construct(null|array|OptionsInterface $config = null) {
         if (!isset(static::$db) && $config !== null) {
             static::$db = new Adapter($config);
         }
