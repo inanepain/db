@@ -1,20 +1,23 @@
 <?php
 
 /**
- * Develop
+ * Inane: Db
  *
- * Tinkering development environment. Used to play with or try out stuff.
+ * Some helpers for database task and query construction.
+ *
+ * $Id$
+ * $Date$
  *
  * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Develop\Tinker
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
