@@ -73,6 +73,13 @@ abstract class AbstractTable {
     protected string $primaryId;
 
     /**
+     * Indicates whether the primary key of the table should auto-increment.
+     *
+     * @var bool
+     */
+    protected bool $autoIncrement = true;
+
+    /**
      * @var string $entityClass The class name associated with a table record.
      */
     protected string $entityClass;

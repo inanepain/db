@@ -32,5 +32,10 @@ use Inane\Db\Adapter\Driver\DriverInterface;
  * @version 1.0.0
  */
 interface AdapterInterface {
+    /**
+     * Retrieves the database driver instance.
+     *
+     * @return DriverInterface|\Inane\Db\Adapter\Driver\AbstractDriver The driver used by the adapter.
+     */
     public function getDriver(): DriverInterface;
 }
