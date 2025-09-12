@@ -102,7 +102,7 @@ abstract class AbstractTable {
      *
      * @return string The primary ID as a string.
      */
-    public function getPrimaryId() : string {
+    public function getPrimaryId(): string {
         return $this->primaryId;
     }
 
@@ -150,7 +150,7 @@ abstract class AbstractTable {
         $data = [];
         if (!\is_string($query)) {
             $sql = 'SELECT * FROM `' . $this->table . '` WHERE ';
-            foreach($query as $key => $value) {
+            foreach ($query as $key => $value) {
                 $data[":$key"] = $value;
                 $sql .= "`$key` like :$key AND ";
             }
@@ -161,6 +161,41 @@ abstract class AbstractTable {
         $stmt = static::$db->getDriver()->prepare($sql);
         $stmt->execute($data);
         return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+    }
+
+    /**
+     * Inserts a new entity into the database on conflict it updates
+     *
+     * @param AbstractEntity $entity The entity to insert or update.
+     *
+     * @return false|AbstractEntity Returns the entity on success, or false on failure.
+     */
+    public function insertUpdate(AbstractEntity $entity): false|AbstractEntity {
+        $array = $entity->getArrayCopy(true);
+        if (!array_key_exists(__FUNCTION__, $this->statement)) {
+            $insKeys = $updKeys = [];
+            foreach (array_keys($array) as $key) {
+                if ($key !== $this->primaryId) $updKeys[] = "$key = excluded.$key";
+                $insKeys[] = $key;
+            }
+
+            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $insKeys) . '") VALUES (:' . implode(', :', $insKeys) . ') ON CONFLICT(' . $this->primaryId . ') DO UPDATE SET ' . implode(', ', $updKeys) . ';';
+            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
+        }
+
+        $data = [];
+        foreach ($array as $key => $value) {
+            $data[":$key"] = $value;
+        }
+
+        $stmt = $this->statement[__FUNCTION__];
+        if ($stmt->execute($data) === false)
+            return false;
+
+        $id = static::$db->getDriver()->lastInsertId();
+        $id = is_numeric($id) ? intval($id) : $id;
+
+        return $this->fetch($id);
     }
 
     /**
@@ -175,7 +210,7 @@ abstract class AbstractTable {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
             $keys = array_keys($array);
 
-            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $keys) . '") VALUES (:'.implode(', :', $keys).')';
+            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $keys) . '") VALUES (:' . implode(', :', $keys) . ')';
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
@@ -212,7 +247,7 @@ abstract class AbstractTable {
 
             $keys = implode(', ', $keys);
 
-            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE ". $entity->getPrimaryId() ." = :" . $entity->getPrimaryId();
+            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE " . $entity->getPrimaryId() . " = :" . $entity->getPrimaryId();
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
@@ -236,7 +271,7 @@ abstract class AbstractTable {
      */
     public function delete(AbstractEntity $entity): bool {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
-            $sql  = "DELETE FROM `" . $this->table . "` WHERE ". $entity->getPrimaryId() ." = :" . $entity->getPrimaryId();
+            $sql  = "DELETE FROM `" . $this->table . "` WHERE " . $entity->getPrimaryId() . " = :" . $entity->getPrimaryId();
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 

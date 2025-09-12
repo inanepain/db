@@ -1,4 +1,4 @@
-= README: Inanepain/db
+= README: inanepain/db
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Some helpers for database task and query construction.

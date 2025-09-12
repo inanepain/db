@@ -10,6 +10,12 @@ Version: $Id$ ($Date$)
 - update: `AbstractTable` fetch single entity by id returns result
   correctly.
 
+- new: `AbstractTable::insertUpdate` uses
+  `insert on conflict update syntax`.
+
+- new: `EntityPrepareMethod` method attribute indicates method to call
+  pre db persistence.
+
 - update: moved to new docs structure.
 
 - update: `OptionsInterface` used throughout.

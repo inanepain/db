@@ -26,6 +26,7 @@ namespace Inane\Db\Entity;
 
 use Exception;
 use Inane\Db\Table\AbstractTable;
+use ReflectionObject;
 use Stringable;
 use Inane\Stdlib\{
     Converters\Arrayable,
@@ -44,6 +45,8 @@ use const JSON_UNESCAPED_UNICODE;
  * This class serves as a base class for entities that need to be
  * represented as arrays and strings. It implements the Arrayable
  * and Stringable interfaces.
+ * 
+ * @version 0.1.0
  */
 abstract class AbstractEntity implements Arrayable, Stringable {
     /**
@@ -88,7 +91,7 @@ abstract class AbstractEntity implements Arrayable, Stringable {
      *
      * @return string The primary ID of the entity.
      */
-    public function getPrimaryId() : string {
+    public function getPrimaryId(): string {
         return $this->primaryId;
     }
 
@@ -97,7 +100,7 @@ abstract class AbstractEntity implements Arrayable, Stringable {
      *
      * @return string|int|float The value of the primary ID, which can be a string, integer, or float.
      */
-    public function getPrimaryIdValue() : string|int|float {
+    public function getPrimaryIdValue(): string|int|float {
         return $this->data[$this->primaryId];
     }
 
@@ -108,7 +111,7 @@ abstract class AbstractEntity implements Arrayable, Stringable {
      *
      * @return bool Returns true if the entity is successfully retrieved, false otherwise.
      */
-    public function fetch(int|string $id) : bool {
+    public function fetch(int|string $id): bool {
         $result = $this->dataTable->fetch($id);
 
         if ($result !== false) {
@@ -121,21 +124,25 @@ abstract class AbstractEntity implements Arrayable, Stringable {
 
     /**
      * Saves the current entity to the database.
+     *   Save makes use of the insertUpdate statement.
      *
      * This method persists the current state of the entity to the database.
      * It returns a boolean indicating whether the save operation was successful.
      * 
-     * @param bool $insert Force insert for tables without auto generated ids.
-     *
      * @return bool True if the entity was successfully saved, false otherwise.
      */
-    public function save(bool $insert = false) : bool {
-        if ($this->getPrimaryIdValue() === null || $insert)
-            $result = $this->dataTable->insert($this);
-        else
-            $result = $this->dataTable->update($this);
+    public function save(): bool {
+        $reflection = new ReflectionObject($this);
+        foreach ($reflection->getMethods() as $method) {
+            $attributes = $method->getAttributes(EntityPrepareMethod::class);
 
-        if ($result !== false) {
+            if (count($attributes) > 0) {
+                $methodName = $method->getName();
+                $this->$methodName();
+            }
+        }
+
+        if ($result = $this->dataTable->insertUpdate($this)) {
             $this->updateData($result->toArray());
             return true;
         }
@@ -188,7 +195,7 @@ abstract class AbstractEntity implements Arrayable, Stringable {
     protected function updateData(array $data): void {
         if (!isset($this->data)) throw new Exception('Error: property $data not defined.');
 
-        foreach($this->data as $key => $value) {
+        foreach ($this->data as $key => $value) {
             if (array_key_exists($key, $data)) {
                 $this->$key = $data[$key];
             }
