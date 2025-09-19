@@ -32,6 +32,7 @@ use Inane\Stdlib\{
     Converters\Arrayable,
     Json
 };
+use Inane\Stdlib\Converters\JSONable;
 
 use function array_key_exists;
 use function is_null;
@@ -48,7 +49,7 @@ use const JSON_UNESCAPED_UNICODE;
  * 
  * @version 0.1.0
  */
-abstract class AbstractEntity implements Arrayable, Stringable {
+abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     /**
      * @var string $primaryId The primary identifier for the entity, default is 'id'.
      */
@@ -151,23 +152,23 @@ abstract class AbstractEntity implements Arrayable, Stringable {
     }
 
     /**
-     * Converts the entity to its string representation.
+     * Updates the entity's data with the provided array.
      *
-     * @return string The string representation of the entity.
+     * @param array $data An associative array containing the data to update.
+     *
+     * @return void
      */
-    public function __toString(): string {
-        return Json::encode($this->data, ['flags' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE]);
+    protected function updateData(array $data): void {
+        if (!isset($this->data)) throw new Exception('Error: property $data not defined.');
+
+        foreach ($this->data as $key => $value) {
+            if (array_key_exists($key, $data)) {
+                $this->$key = $data[$key];
+            }
+        }
     }
 
-    /**
-     * Converts the entity to an array.
-     *
-     * @return array An associative array representation of the entity.
-     */
-    public function toArray(): array {
-        return $this->getArrayCopy();
-    }
-
+    #region Export Entity
     /**
      * Returns an array representation of the entity.
      *
@@ -186,19 +187,30 @@ abstract class AbstractEntity implements Arrayable, Stringable {
     }
 
     /**
-     * Updates the entity's data with the provided array.
+     * Converts the entity to its string representation.
      *
-     * @param array $data An associative array containing the data to update.
-     *
-     * @return void
+     * @return string The string representation of the entity.
      */
-    protected function updateData(array $data): void {
-        if (!isset($this->data)) throw new Exception('Error: property $data not defined.');
-
-        foreach ($this->data as $key => $value) {
-            if (array_key_exists($key, $data)) {
-                $this->$key = $data[$key];
-            }
-        }
+    public function __toString(): string {
+        return Json::encode($this->data, ['flags' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE]);
     }
+
+    /**
+     * Converts the entity to an array.
+     *
+     * @return array An associative array representation of the entity.
+     */
+    public function toArray(): array {
+        return $this->getArrayCopy();
+    }
+
+    /**
+     * Return JSON representation of data
+     *
+     * @return array as JSON
+     */
+    public function toJSON(): string {
+        return Json::encode($this->toArray());
+    }
+    #endregion Export Entity
 }
