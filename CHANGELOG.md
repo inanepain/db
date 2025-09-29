@@ -7,6 +7,8 @@ Version: $Id$ ($Date$)
 - update: `AbstractEntity::save` added optional parameter **bool**
   `insert` for non-automatic primary id fields.
 
+- update: `AbstractEntity` `JSONable`.
+
 - update: `AbstractTable` fetch single entity by id returns result
   correctly.
 
