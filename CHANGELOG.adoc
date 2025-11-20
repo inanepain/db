@@ -3,10 +3,10 @@
 :email: <philip@cathedral.co.za>
 :description: Some helpers for database task and query construction.
 :keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
-:revnumber: 0.3.0
-:revdate: 2025-11-20
-// :revremark: -dev
-// :version-label: Unconfirmed
+:revnumber: 0.4.0
+:revdate: 2025-xx-xx
+:revremark: -dev
+:version-label: Unconfirmed
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -18,7 +18,14 @@
 
 == History
 
-// include::./release/0.0.0.adoc[leveloffset=+2]
+:leveloffset: +2
+
+= 0.4.0-dev (2025 Xxx xx)
+:revnumber: 0.4.0
+:revdate: 2025-XX-XX
+
+
+:leveloffset!:
 :leveloffset: +2
 
 = 0.3.0-dev (2025 Nov 20)
