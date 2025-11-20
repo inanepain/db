@@ -4,9 +4,9 @@
 :description: Some helpers for database task and query construction.
 :keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
 :revnumber: 0.3.0
-:revdate: 2025-xx-xx
-:revremark: -dev
-:version-label: Unconfirmed
+:revdate: 2025-11-20
+// :revremark: -dev
+// :version-label: Unconfirmed
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -16,15 +16,14 @@
 :toc: left
 :sectanchors:
 
-Version: $Id$ ($Date$)
-
 == History
 
+// include::./release/0.0.0.adoc[leveloffset=+2]
 :leveloffset: +2
 
-= 0.3.0-dev (2025 Xxx xx)
+= 0.3.0-dev (2025 Nov 20)
 :revnumber: 0.3.0
-:revdate: 2025-XX-XX
+:revdate: 2025-11-20
 
 * update: `AbstractEntity::save` added optional parameter *bool* `insert` for non-automatic primary id fields.
 * update: `AbstractEntity` `JSONable`.
@@ -39,7 +38,6 @@ Version: $Id$ ($Date$)
 * fix: `QueryBuilders` error with null where clauses.
 
 :leveloffset!:
-
 :leveloffset: +2
 
 = 0.2.0 (2025 Apr 25)

@@ -1,15 +1,4 @@
-= 0.3.0-dev (2025 Xxx xx)
-:revnumber: 0.3.0
+= 0.4.0-dev (2025 Xxx xx)
+:revnumber: 0.4.0
 :revdate: 2025-XX-XX
 
-* update: `AbstractEntity::save` added optional parameter *bool* `insert` for non-automatic primary id fields.
-* update: `AbstractEntity` `JSONable`.
-* update: `AbstractTable` fetch single entity by id returns result correctly.
-* new: `AbstractTable::insertUpdate` uses `insert on conflict update syntax`.
-* new: `EntityPrepareMethod` method attribute indicates method to call pre db persistence.
-* new: `QueryBuilders*` are now `Stringable`.
-* new: `Drivers::getQueryBuilder` methoded added to quickly get to a builder.
-* new: `AbbstractTable::getQueryBuilder` methoded added to quickly get to a builder.
-* update: moved to documentation to the new structure.
-* update: `OptionsInterface` used throughout.
-* fix: `QueryBuilders` error with null where clauses.
