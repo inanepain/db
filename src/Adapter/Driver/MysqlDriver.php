@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
+use Inane\Db\Sql\MysqlQueryBuilder;
+use Inane\Db\Sql\SQLQueryBuilderInterface;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
@@ -46,4 +48,13 @@ class MysqlDriver extends AbstractDriver {
 
         parent::__construct('mysql:' . implode(';', $dsn), $config['username'] ?? null, $config['password'] ?? null);
     } // __construct
+
+	/**
+	 * Returns an instance of SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface {
+		return new MysqlQueryBuilder();
+	}
 }

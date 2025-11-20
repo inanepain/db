@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter;
 
+use Inane\Db\Adapter\Driver\AbstractDriver;
 use Inane\Db\Adapter\Driver\DriverInterface;
 
 /**
@@ -35,7 +36,7 @@ interface AdapterInterface {
     /**
      * Retrieves the database driver instance.
      *
-     * @return DriverInterface|\Inane\Db\Adapter\Driver\AbstractDriver The driver used by the adapter.
+     * @return DriverInterface|AbstractDriver The driver used by the adapter.
      */
     public function getDriver(): DriverInterface;
 }

@@ -24,11 +24,18 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
+use Inane\Db\Sql\SQLQueryBuilderInterface;
+
 /**
  * Driver Interface
  *
  * @version 1.0.0
  */
 interface DriverInterface {
-
+	/**
+	 * Retrieves an instance of the SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface An instance of a class implementing SQLQueryBuilderInterface.
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface;
 }

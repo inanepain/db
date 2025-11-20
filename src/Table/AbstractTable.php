@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Inane\Db\Table;
 
 use Inane\Db\Entity\AbstractEntity;
+use Inane\Db\Sql\SQLQueryBuilderInterface;
 use PDO;
 use Inane\Db\Adapter\{
     Adapter,
@@ -84,19 +85,31 @@ abstract class AbstractTable {
      */
     protected string $entityClass;
 
-    /**
-     * Constructor for the AbstractTable class.
-     *
-     * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
-     */
+	/**
+	 * Constructor for the AbstractTable class.
+	 *
+	 * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
+	 *
+	 * @throws \Exception
+	 */
     public function __construct(null|array|OptionsInterface $config = null) {
         if (!isset(static::$db) && $config !== null) {
             static::$db = new Adapter($config);
         }
     }
 
-    #region database table methods
+	#region Utility Methods
+	/**
+	 * Returns an instance of SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface Returns an instance of SQLQueryBuilderInterface.
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface {
+		return $this::$db->getDriver()->getQueryBuilder();
+	}
+	#endregion Utility Methods
 
+    #region database table methods
     /**
      * Retrieves the primary ID of the table.
      *

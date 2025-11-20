@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Inane\Db\Sql;
 
+use Stringable;
 use const null;
 
 /**
@@ -34,7 +35,7 @@ use const null;
  *
  * @version 1.0.0
  */
-interface SQLQueryBuilderInterface {
+interface SQLQueryBuilderInterface extends Stringable {
     /**
      * Build a base SELECT query.
      *
