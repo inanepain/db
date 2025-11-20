@@ -3,23 +3,28 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Inane\Db
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
+
+use Inane\Db\Sql\SQLQueryBuilderInterface;
 
 /**
  * Driver Interface
@@ -27,5 +32,10 @@ namespace Inane\Db\Adapter\Driver;
  * @version 1.0.0
  */
 interface DriverInterface {
-
+	/**
+	 * Retrieves an instance of the SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface An instance of a class implementing SQLQueryBuilderInterface.
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface;
 }

@@ -3,18 +3,21 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
  *
- * @author Philip Michael Raab<peep@inane.co.za>
- * @package Inane\Db
+ * PHP version 8.4
+ *
+ * @author Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -52,19 +55,28 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
 
     protected function reset(): void {
         // $this->query = new \stdClass();
-        $this->query = new Options(['where' => []]);
+        $this->query = new Options();
     }
 
-    /**
-     * Build a base SELECT query.
-     *
-     * @param string $table source table
-     * @param array $fields the fields to show or empty for all
-     *
-     * @return \Inane\Db\SQLQueryBuilderInterface
-     */
+	protected function parseFields(array $fields): string {
+		return count($fields) == 0 ? '*' : implode(', ', $fields);
+//		foreach ($fields as $key => $value) {
+//			if (is_array($value)) {
+//				if ($key === 'count') $fields[$key] = 'COUNT(*)';
+//			}
+//		}
+	}
+
+	/**
+	 * Build a base SELECT query.
+	 *
+	 * @param string $table  source table
+	 * @param array  $fields the fields to show or empty for all
+	 *
+	 * @return SQLQueryBuilderInterface
+	 */
     public function select(string $table, array $fields = []): SQLQueryBuilderInterface {
-        $fieldsString = count($fields) == 0 ? '*' : implode(', ', $fields);
+		$fieldsString = $this->parseFields($fields);
 
         $this->query->base = 'SELECT ' . $fieldsString . ' FROM ' . $table;
         $this->query->type = 'select';
@@ -80,6 +92,7 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
             throw new \Exception('WHERE can only be added to SELECT, UPDATE OR DELETE');
 
         $quote = is_int($value) ? '' : "'";
+		if (!$this->query->offsetExists('where')) $this->query->offsetSet('where', []);
         $this->query->where[] = "$field $operator $quote$value$quote";
 
         return $this;
@@ -98,9 +111,11 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
         return $this;
     }
 
-    /**
-     * Get the final query string.
-     */
+	/**
+	 * Get the final query string.
+	 *
+	 * @return string
+	 */
     public function getSQL(): string {
         $query = $this->query;
         $sql = $query->base;
@@ -112,4 +127,13 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
 
         return $sql . ';';
     }
+
+	/**
+	 * Converts the object to its string representation.
+	 *
+	 * @return string The SQL string representation of the object.
+	 */
+	public function __toString(): string {
+		return $this->getSQL();
+	}
 }

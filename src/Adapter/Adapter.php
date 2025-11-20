@@ -3,18 +3,21 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Inane\Db
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -22,6 +25,7 @@ declare(strict_types=1);
 namespace Inane\Db\Adapter;
 
 use Inane\Db\Adapter\Driver\DriverInterface;
+use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
 /**
@@ -38,11 +42,11 @@ class Adapter implements AdapterInterface {
     /**
      * Constructor for the Adapter class.
      *
-     * @param array|Options $config Optional configuration settings for the adapter.
+     * @param array|Options|OptionsInterface $config Optional configuration settings for the adapter.
      *                       This array can include various parameters required
      *                       for initializing the adapter.
      */
-    public function __construct(array|Options $config = []) {
+    public function __construct(array|Options|OptionsInterface $config = []) {
         // Set the adapter to the appropriate class based on the driver
         if ($config['driver'] == 'sqlite') {
             $this->driver = new \Inane\Db\Adapter\Driver\SqliteDriver($config);

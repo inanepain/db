@@ -1,11 +1,2 @@
-Inane\Db:
-	Query:
-		- select
-			- all fields
-		- insert
-		- update
-		- delete
-	Code Doc:
-		- Implement, improve or update, at least cover the basics
-	- Throw Inane Exceptions
-	- Organise the various classes into sun namespaces
+Inane/db:
+  Some helpers for database task and query construction.

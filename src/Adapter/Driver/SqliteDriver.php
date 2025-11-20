@@ -3,24 +3,30 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Inane\Db
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
+use Inane\Db\Sql\SqliteQueryBuilder;
+use Inane\Db\Sql\SQLQueryBuilderInterface;
+use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
 /**
@@ -29,9 +35,18 @@ use Inane\Stdlib\Options;
  * @version 1.0.0
  */
 class SqliteDriver extends AbstractDriver {
-    public function __construct(array|Options $config = []) {
+    public function __construct(array|Options|OptionsInterface $config = []) {
         $dsn = 'sqlite:' . $config['dbname'];
 
         parent::__construct($dsn);
     } // __construct
+
+	/**
+	 * Returns an instance of SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface Returns an instance of SQLQueryBuilderInterface.
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface {
+		return new SqliteQueryBuilder();
+	}
 }

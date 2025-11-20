@@ -1,20 +1,23 @@
 <?php
 
 /**
- * Develop
+ * Inane: Db
  *
- * Tinkering development environment. Used to play with or try out stuff.
+ * Some helpers for database task and query construction.
+ *
+ * $Id$
+ * $Date$
  *
  * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Develop\Tinker
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -22,11 +25,13 @@ declare(strict_types=1);
 namespace Inane\Db\Table;
 
 use Inane\Db\Entity\AbstractEntity;
+use Inane\Db\Sql\SQLQueryBuilderInterface;
 use PDO;
 use Inane\Db\Adapter\{
     Adapter,
     AdapterInterface
 };
+use Inane\Stdlib\Array\OptionsInterface;
 
 use function array_key_exists;
 use function array_keys;
@@ -44,6 +49,8 @@ use const null;
  *
  * This class provides a base for all database table classes,
  * defining common functionality and structure.
+ * 
+ * // TODO: version bump
  */
 abstract class AbstractTable {
     /**
@@ -67,29 +74,48 @@ abstract class AbstractTable {
     protected string $primaryId;
 
     /**
+     * Indicates whether the primary key of the table should auto-increment.
+     *
+     * @var bool
+     */
+    protected bool $autoIncrement = true;
+
+    /**
      * @var string $entityClass The class name associated with a table record.
      */
     protected string $entityClass;
 
-    /**
-     * Constructor for the AbstractTable class.
-     *
-     * @param array|null $config Optional array of data to initialize the entity.
-     */
-    public function __construct(?array $config = null) {
+	/**
+	 * Constructor for the AbstractTable class.
+	 *
+	 * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
+	 *
+	 * @throws \Exception
+	 */
+    public function __construct(null|array|OptionsInterface $config = null) {
         if (!isset(static::$db) && $config !== null) {
             static::$db = new Adapter($config);
         }
     }
 
-    #region database table methods
+	#region Utility Methods
+	/**
+	 * Returns an instance of SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface Returns an instance of SQLQueryBuilderInterface.
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface {
+		return $this::$db->getDriver()->getQueryBuilder();
+	}
+	#endregion Utility Methods
 
+    #region database table methods
     /**
      * Retrieves the primary ID of the table.
      *
      * @return string The primary ID as a string.
      */
-    public function getPrimaryId() : string {
+    public function getPrimaryId(): string {
         return $this->primaryId;
     }
 
@@ -120,7 +146,10 @@ abstract class AbstractTable {
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute([':' . $this->primaryId => $id]);
-        return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this])[0] ?: false;
+
+        $result = $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+        if (empty($result)) return false;
+        else return $result[0];
     }
 
     /**
@@ -134,7 +163,7 @@ abstract class AbstractTable {
         $data = [];
         if (!\is_string($query)) {
             $sql = 'SELECT * FROM `' . $this->table . '` WHERE ';
-            foreach($query as $key => $value) {
+            foreach ($query as $key => $value) {
                 $data[":$key"] = $value;
                 $sql .= "`$key` like :$key AND ";
             }
@@ -145,6 +174,41 @@ abstract class AbstractTable {
         $stmt = static::$db->getDriver()->prepare($sql);
         $stmt->execute($data);
         return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+    }
+
+    /**
+     * Inserts a new entity into the database on conflict it updates
+     *
+     * @param AbstractEntity $entity The entity to insert or update.
+     *
+     * @return false|AbstractEntity Returns the entity on success, or false on failure.
+     */
+    public function insertUpdate(AbstractEntity $entity): false|AbstractEntity {
+        $array = $entity->getArrayCopy(true);
+        if (!array_key_exists(__FUNCTION__, $this->statement)) {
+            $insKeys = $updKeys = [];
+            foreach (array_keys($array) as $key) {
+                if ($key !== $this->primaryId) $updKeys[] = "$key = excluded.$key";
+                $insKeys[] = $key;
+            }
+
+            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $insKeys) . '") VALUES (:' . implode(', :', $insKeys) . ') ON CONFLICT(' . $this->primaryId . ') DO UPDATE SET ' . implode(', ', $updKeys) . ';';
+            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
+        }
+
+        $data = [];
+        foreach ($array as $key => $value) {
+            $data[":$key"] = $value;
+        }
+
+        $stmt = $this->statement[__FUNCTION__];
+        if ($stmt->execute($data) === false)
+            return false;
+
+        $id = static::$db->getDriver()->lastInsertId();
+        $id = is_numeric($id) ? intval($id) : $id;
+
+        return $this->fetch($id);
     }
 
     /**
@@ -159,7 +223,7 @@ abstract class AbstractTable {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
             $keys = array_keys($array);
 
-            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $keys) . '") VALUES (:'.implode(', :', $keys).')';
+            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $keys) . '") VALUES (:' . implode(', :', $keys) . ')';
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
@@ -196,7 +260,7 @@ abstract class AbstractTable {
 
             $keys = implode(', ', $keys);
 
-            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE ". $entity->getPrimaryId() ." = :" . $entity->getPrimaryId();
+            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE " . $entity->getPrimaryId() . " = :" . $entity->getPrimaryId();
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
@@ -220,7 +284,7 @@ abstract class AbstractTable {
      */
     public function delete(AbstractEntity $entity): bool {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
-            $sql  = "DELETE FROM `" . $this->table . "` WHERE ". $entity->getPrimaryId() ." = :" . $entity->getPrimaryId();
+            $sql  = "DELETE FROM `" . $this->table . "` WHERE " . $entity->getPrimaryId() . " = :" . $entity->getPrimaryId();
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 

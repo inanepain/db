@@ -1,0 +1,38 @@
+= README: inanepain/db
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Some helpers for database task and query construction.
+:keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
+:copyright: Unlicense
+:homepage: https://git.cathedral.co.za:3000/inanepain/db
+:revnumber: 0.3.0
+:revdate: 2025-11-20
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:sectanchors:
+:idprefix: topic-
+:idseparator: -
+:pkg-vendor: inanepain
+:pkg-name: db
+:pkg-id: {pkg-vendor}/{pkg-name}
+
+== image:./icon.png[title={pkg-id},25] {pkg-id}
+
+{description}
+
+<<<
+
+include::part/install.adoc[leveloffset=+1]
+
+<<<
+
+include::part/usage.adoc[leveloffset=+1]
+
+<<<
+
+== Revision
+
+ version: $Id$ ($Date$)

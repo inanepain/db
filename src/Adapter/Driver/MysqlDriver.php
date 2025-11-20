@@ -3,24 +3,30 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Inane\Db
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
+use Inane\Db\Sql\MysqlQueryBuilder;
+use Inane\Db\Sql\SQLQueryBuilderInterface;
+use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
 use function array_intersect_key;
@@ -32,7 +38,7 @@ use function implode;
  * @version 1.0.0
  */
 class MysqlDriver extends AbstractDriver {
-    public function __construct(array|Options $config = []) {
+    public function __construct(array|Options|OptionsInterface $config = []) {
         $opts = array_intersect_key($config, ['dbname' => '', 'host' => '', 'port' => '', 'unix_socket' => '']);
 
         $dsn = [];
@@ -42,4 +48,13 @@ class MysqlDriver extends AbstractDriver {
 
         parent::__construct('mysql:' . implode(';', $dsn), $config['username'] ?? null, $config['password'] ?? null);
     } // __construct
+
+	/**
+	 * Returns an instance of SQLQueryBuilderInterface.
+	 *
+	 * @return SQLQueryBuilderInterface
+	 */
+	public function getQueryBuilder(): SQLQueryBuilderInterface {
+		return new MysqlQueryBuilder();
+	}
 }

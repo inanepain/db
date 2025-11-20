@@ -3,24 +3,28 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Inane\Db
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
 
 namespace Inane\Db\Adapter;
 
+use Inane\Db\Adapter\Driver\AbstractDriver;
 use Inane\Db\Adapter\Driver\DriverInterface;
 
 /**
@@ -29,5 +33,10 @@ use Inane\Db\Adapter\Driver\DriverInterface;
  * @version 1.0.0
  */
 interface AdapterInterface {
+    /**
+     * Retrieves the database driver instance.
+     *
+     * @return DriverInterface|AbstractDriver The driver used by the adapter.
+     */
     public function getDriver(): DriverInterface;
 }

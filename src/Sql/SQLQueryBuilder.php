@@ -3,18 +3,21 @@
 /**
  * Inane: Db
  *
- * Inane Database
+ * Some helpers for database task and query construction.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
  *
- * @author Philip Michael Raab<peep@inane.co.za>
- * @package Inane\Db
+ * PHP version 8.4
+ *
+ * @author Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\db
+ * @category db
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -57,7 +60,7 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
      * @return void
      */
     protected function reset(?string $serialised = null): void {
-        $this->queryProperties = $serialised ? unserialize($serialised) : new Options(['where' => []]);
+        $this->queryProperties = $serialised ? unserialize($serialised, Options::class) : new Options();
     }
 
     /**
@@ -90,6 +93,7 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
      * @return \Inane\Db\SQLQueryBuilderInterface
      */
     public function where(string $field, string|int $value, string|Operator $operator = '='): SQLQueryBuilderInterface {
+	    if (!$this->queryProperties->offsetExists('where')) $this->queryProperties->offsetSet('where', []);
         $this->queryProperties->where[] = [
             'field' => $field,
             'value' => $value,
@@ -135,11 +139,20 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
     public function getSQLFor(SQLQueryBuilderInterface $QueryBuilder): string {
         $QueryBuilder->select(...$this->queryProperties->select->toArray());
 
-        foreach ($this->queryProperties->where as $where)
+        foreach ($this->queryProperties->where ?: [] as $where)
             $QueryBuilder->where(...$where);
 
         $QueryBuilder->limit(...$this->queryProperties->limit->toArray());
 
         return $QueryBuilder->getSQL();
     }
+
+	/**
+	 * Converts the object to its string representation.
+	 *
+	 * @return string The SQL string representation of the object.
+	 */
+	public function __toString(): string {
+		return $this->getSQL();
+	}
 }

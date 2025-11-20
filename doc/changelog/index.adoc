@@ -1,0 +1,24 @@
+= Changelog: inanepain/db
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Some helpers for database task and query construction.
+:keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
+:revnumber: 0.3.0
+:revdate: 2025-11-20
+// :revremark: -dev
+// :version-label: Unconfirmed
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+== History
+
+// include::./release/0.0.0.adoc[leveloffset=+2]
+include::./release/0.3.0.adoc[leveloffset=+2]
+include::./release/0.2.0.adoc[leveloffset=+2]
+include::./release/0.1.0.adoc[leveloffset=+2]

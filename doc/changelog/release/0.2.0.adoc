@@ -1,0 +1,17 @@
+= 0.2.0 (2025 Apr 25)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Some helpers for database task and query construction.
+:keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
+:revnumber: 0.2.0
+:revdate: 2025-04-25
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: auto
+:sectanchors:
+
+* new: DB-Layer for database access initial basic release
