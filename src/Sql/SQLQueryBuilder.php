@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Inane\Db\Sql;
 
+use Inane\Stdlib\Exception\RuntimeException;
 use Inane\Stdlib\Options;
 
 use function serialize;
@@ -83,15 +84,17 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
         return $this;
     }
 
-    /**
-     * Add a where clause
-     *
-     * @param string $field
-     * @param string|int $value
-     * @param string|Operator $operator
-     *
-     * @return \Inane\Db\SQLQueryBuilderInterface
-     */
+	/**
+	 * Add a where clause
+	 *
+	 * @param string          $field
+	 * @param string|int      $value
+	 * @param string|Operator $operator
+	 *
+	 * @return SQLQueryBuilderInterface
+	 *
+	 * @throws RuntimeException
+	 */
     public function where(string $field, string|int $value, string|Operator $operator = '='): SQLQueryBuilderInterface {
 	    if (!$this->queryProperties->offsetExists('where')) $this->queryProperties->offsetSet('where', []);
         $this->queryProperties->where[] = [

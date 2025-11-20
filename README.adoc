@@ -13,6 +13,7 @@
 :source-highlighter: highlight.js
 :toc: left
 :sectanchors:
+:toclevels: 4
 :idprefix: topic-
 :idseparator: -
 :pkg-vendor: inanepain
@@ -22,6 +23,8 @@
 == image:./icon.png[title={pkg-id},25] {pkg-id}
 
 {description}
+
+:sectnums:
 
 <<<
 
@@ -73,6 +76,39 @@ SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10, 20
 -- Testing PostgresSQL query builder:
 SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10 OFFSET 20;
 ----
+
+:leveloffset: +2
+
+= Where
+
+Restricting your queries with where clauses.
+
+[source,php]
+----
+$wheres = [
+    ['views', 10, '>'],
+    new WhereClause('favourite', 1),
+    ['name', 'Bob'],
+    [['name', 'John']],
+];
+
+$qb = new SqliteQueryBuilder();
+$qb->select('fortunes', ['fortune'])
+    // ->where('views', 10, '>')
+    ->wheres($wheres)
+;
+
+echo((string)$qb);
+----
+
+Which should give you:
+
+[source,sql]
+----
+SELECT fortune FROM fortunes WHERE views > 10 and favourite = 1 and name = 'Bob' or name = 'John';
+----
+
+:leveloffset: 1
 
 :leveloffset!:
 

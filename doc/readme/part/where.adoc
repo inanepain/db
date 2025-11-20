@@ -1,0 +1,28 @@
+= Where
+
+Restricting your queries with where clauses.
+
+[source,php]
+----
+$wheres = [
+    ['views', 10, '>'],
+    new WhereClause('favourite', 1),
+    ['name', 'Bob'],
+    [['name', 'John']],
+];
+
+$qb = new SqliteQueryBuilder();
+$qb->select('fortunes', ['fortune'])
+    // ->where('views', 10, '>')
+    ->wheres($wheres)
+;
+
+echo((string)$qb);
+----
+
+Which should give you:
+
+[source,sql]
+----
+SELECT fortune FROM fortunes WHERE views > 10 and favourite = 1 and name = 'Bob' or name = 'John';
+----

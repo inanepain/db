@@ -49,15 +49,33 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
      */
     protected Options $query;
 
-    public function __construct() {
+	/**
+	 * Initialises the object and sets up its initial state.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
         $this->reset();
     }
 
-    protected function reset(): void {
+	/**
+	 * Resets the query property to a new instance of the Options class.
+	 *
+	 * @return void
+	 */
+	protected function reset(): void {
         // $this->query = new \stdClass();
         $this->query = new Options();
     }
 
+	/**
+	 * Parses an array of fields and generates a string for use in a SQL query.
+	 * If the array is empty, it defaults to returning "*".
+	 *
+	 * @param array $fields The array of fields to be parsed.
+	 *
+	 * @return string The resulting string of parsed fields, separated by commas, or "*" if no fields are provided.
+	 */
 	protected function parseFields(array $fields): string {
 		return count($fields) == 0 ? '*' : implode(', ', $fields);
 //		foreach ($fields as $key => $value) {
@@ -84,19 +102,42 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
         return $this;
     }
 
-    /**
-     * Add a WHERE condition.
-     */
+	/**
+	 * Adds a WHERE condition to the SQL query. This method supports SELECT, UPDATE, or DELETE queries only.
+	 *
+	 * @param string     $field    The name of the database column to compare.
+	 * @param string|int $value    The value to compare against the specified column.
+	 * @param string     $operator The comparison operator to use (e.g., '=', '>', '<'). Default is '='.
+	 *
+	 * @return SQLQueryBuilderInterface Returns the current instance of the query builder for method chaining.
+	 *
+	 * @throws \Exception If the query type is not SELECT, UPDATE, or DELETE.
+	 */
     public function where(string $field, string|int $value, string $operator = '='): SQLQueryBuilderInterface {
         if (!in_array($this->query->type, ['select', 'update', 'delete']))
             throw new \Exception('WHERE can only be added to SELECT, UPDATE OR DELETE');
 
-        $quote = is_int($value) ? '' : "'";
-		if (!$this->query->offsetExists('where')) $this->query->offsetSet('where', []);
-        $this->query->where[] = "$field $operator $quote$value$quote";
+//        $quote = is_int($value) ? '' : "'";
+		if (!$this->query->offsetExists('where')) $this->query->offsetSet('where', new Where());
+	    $this->query->where->addWhere($field, $value, $operator);
+//        $this->query->where[] = "$field $operator $quote$value$quote";
 
         return $this;
     }
+
+	/**
+	 * Adds one or more conditions to the "WHERE" clause of the SQL query.
+	 *
+	 * @param array|Where $wheres  The conditions to be added. Can be an instance of Where
+	 *                             or an array of conditions to initialize a new Where object.
+	 *
+	 * @return SQLQueryBuilderInterface The current instance of the query builder for method chaining.
+	 */
+	public function wheres(array|Where $wheres): SQLQueryBuilderInterface {
+		$where = $wheres instanceof Where ? $wheres : new Where($wheres);
+		$this->query->offsetSet('where', $where);
+		return $this;
+	}
 
     /**
      * Add a LIMIT constraint.
@@ -119,8 +160,11 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
     public function getSQL(): string {
         $query = $this->query;
         $sql = $query->base;
-        if (!empty($query->where))
-            $sql .= ' WHERE ' . implode(' AND ', $query->where->toArray());
+		if ($query->offsetExists('where'))
+			$sql .= ' WHERE ' . (string)$query->where;
+
+//        if (!empty($query->where))
+//            $sql .= ' WHERE ' . implode(' AND ', $query->where->toArray());
 
         if ($query->offsetExists('limit'))
             $sql .= $query->limit;

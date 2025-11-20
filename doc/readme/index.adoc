@@ -13,6 +13,7 @@
 :source-highlighter: highlight.js
 :toc: left
 :sectanchors:
+:toclevels: 4
 :idprefix: topic-
 :idseparator: -
 :pkg-vendor: inanepain
@@ -22,6 +23,8 @@
 == image:./icon.png[title={pkg-id},25] {pkg-id}
 
 {description}
+
+:sectnums:
 
 <<<
 
