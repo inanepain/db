@@ -38,6 +38,7 @@ use function array_keys;
 use function implode;
 use function intval;
 use function is_numeric;
+use function array_first;
 
 use const false;
 use const null;
@@ -149,7 +150,7 @@ abstract class AbstractTable {
 
         $result = $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
         if (empty($result)) return false;
-        else return $result[0];
+        else return array_first($result);
     }
 
     /**

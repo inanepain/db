@@ -23,6 +23,7 @@ use Stringable;
 
 use function implode;
 use function is_array;
+use function array_first;
 
 /**
  * Where
@@ -44,26 +45,26 @@ class Where implements Stringable {
 	 * Each where clause can be passed as an array of arguments or as a WhereClause object.
 	 * If an array of arrays is passed, it will be treated as a nested where clause and handled as an **OR** condition.
 	 *
-	 * @param array|array[]|string[] $wheres An optional array of conditions to initialise the Where object with.
+	 * @param array|array[]|string[] $whereGrp An optional array of conditions to initialise the Where object with.
 	 */
-	public function __construct(array $wheres = []) {
-		$this->parseWheres($wheres);
+	public function __construct(array $whereGrp = []) {
+		$this->parseWhereCollection($whereGrp);
 	}
 
 	/**
 	 * Parses an array of where conditions and constructs valid where clauses
 	 * by processing nested arrays or handling different where condition formats.
 	 *
-	 * @param array $wheres The array of where conditions to process. Each element can be an array,
+	 * @param array $whereGrp The array of where conditions to process. Each element can be an array,
 	 *                      an instance of WhereClause, or another format representing a condition.
 	 * @param bool  $or     Determines whether the conditions should be combined using OR logic.
 	 *                      Defaults to false (AND logic).
 	 *
 	 * @return void
 	 */
-	private function parseWheres(array $wheres = [], bool $or = false) {
-		foreach($wheres as $where) {
-			if (is_array($where) && is_array($where[0])) $this->parseWheres($where, true);
+	private function parseWhereCollection(array $whereGrp = [], bool $or = false) {
+		foreach($whereGrp as $where) {
+			if (is_array($where) && is_array(array_first($where))) $this->parseWhereCollection($where, true);
 			elseif (is_array($where)) {
 				$add = count($where) === 2 ? (array_merge($where, ['=', $or])) : array_merge($where, [$or]);
 				$this->addWhere(...$add);
