@@ -207,7 +207,7 @@ abstract class AbstractTable {
             return false;
 
         $id = static::$db->getDriver()->lastInsertId();
-        $id = is_numeric($id) ? intval($id) : $id;
+        $id = is_numeric($id) ? (int)$id : $id;
 
         return $this->fetch($id);
     }
