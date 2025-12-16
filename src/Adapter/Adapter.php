@@ -48,9 +48,9 @@ class Adapter implements AdapterInterface {
      */
     public function __construct(array|Options|OptionsInterface $config = []) {
         // Set the adapter to the appropriate class based on the driver
-        if ($config['driver'] == 'sqlite') {
+        if ($config['driver'] === 'sqlite') {
             $this->driver = new \Inane\Db\Adapter\Driver\SqliteDriver($config);
-        } elseif ($config['driver'] == 'mysql') {
+        } elseif ($config['driver'] === 'mysql') {
             $this->driver = new \Inane\Db\Adapter\Driver\MysqlDriver($config);
         } else {
             throw new \Exception('Unsupported driver: ' . $config['driver']);

@@ -179,7 +179,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     public function getArrayCopy(bool $withPrimary = true): array {
         $data = [];
         foreach ($this->data as $key => $value) {
-            if (!$withPrimary && $key == $this->primaryId) continue;
+            if (!$withPrimary && $key === $this->primaryId) continue;
             $data[$key] = $value;
         }
 
