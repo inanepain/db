@@ -170,8 +170,10 @@ abstract class AbstractTable {
         if ($query instanceof Where) {
             $qb->whereReplace($query);
         } elseif (!is_string($query)) {
-            $where = new Where($query);
-            $qb->whereReplace($where);
+            foreach ($query as $key => $value)
+                $qb->where($key, $value, 'like');
+            // $where = new Where($query);
+            // $qb->whereReplace($where);
         } else {
             $parts = explode(' ', $query, 3);
             $qb->where($parts[0], $parts[2], $parts[1]);
