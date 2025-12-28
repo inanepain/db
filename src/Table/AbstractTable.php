@@ -26,6 +26,7 @@ namespace Inane\Db\Table;
 
 use Inane\Db\Entity\AbstractEntity;
 use Inane\Db\Sql\SQLQueryBuilderInterface;
+use Inane\Db\Sql\Where;
 use PDO;
 use Inane\Db\Adapter\{
     Adapter,
@@ -35,10 +36,12 @@ use Inane\Stdlib\Array\OptionsInterface;
 
 use function array_key_exists;
 use function array_keys;
+use function explode;
 use function implode;
 use function intval;
 use function is_numeric;
 use function array_first;
+use function is_string;
 
 use const false;
 use const null;
@@ -50,7 +53,7 @@ use const null;
  *
  * This class provides a base for all database table classes,
  * defining common functionality and structure.
- * 
+ *
  * // TODO: version bump
  */
 abstract class AbstractTable {
@@ -160,19 +163,21 @@ abstract class AbstractTable {
      *
      * @return array|AbstractEntity[] The search results as an array.
      */
-    public function search(array|string $query): array {
+    public function search(array|Where|string $query): array {
         $data = [];
-        if (!\is_string($query)) {
-            $sql = 'SELECT * FROM `' . $this->table . '` WHERE ';
-            foreach ($query as $key => $value) {
-                $data[":$key"] = $value;
-                $sql .= "`$key` like :$key AND ";
-            }
-            $sql = substr($sql, 0, -4);
+        $qb = $this->getQueryBuilder()->select($this->table);
+
+        if ($query instanceof Where) {
+            $qb->whereReplace($query);
+        } elseif (!is_string($query)) {
+            $where = new Where($query);
+            $qb->whereReplace($where);
         } else {
-            $sql = 'SELECT * FROM `' . $this->table . '` WHERE ' . $query;
+            $parts = explode(' ', $query, 3);
+            $qb->where($parts[0], $parts[2], $parts[1]);
         }
-        $stmt = static::$db->getDriver()->prepare($sql);
+
+        $stmt = static::$db->getDriver()->prepare((string)$qb);
         $stmt->execute($data);
         return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
     }

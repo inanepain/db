@@ -62,9 +62,12 @@ class Where implements Stringable {
 	 *
 	 * @return void
 	 */
-	private function parseWhereCollection(array $whereGrp = [], bool $or = false) {
-		foreach($whereGrp as $where) {
-			if (is_array($where) && is_array(array_first($where))) $this->parseWhereCollection($where, true);
+	private function parseWhereCollection(array $whereGrp = [], bool $or = false): void {
+		foreach($whereGrp as $key => $where) {
+            if (!is_numeric($key)) {
+                $where = [$key, $where];
+            }
+            if (is_array($where) && is_array(array_first($where))) $this->parseWhereCollection($where, true);
 			elseif (is_array($where)) {
 				$add = count($where) === 2 ? (array_merge($where, ['=', $or])) : array_merge($where, [$or]);
 				$this->addWhere(...$add);
