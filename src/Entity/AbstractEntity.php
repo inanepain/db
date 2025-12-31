@@ -46,7 +46,7 @@ use const JSON_UNESCAPED_UNICODE;
  * This class serves as a base class for entities that need to be
  * represented as arrays and strings. It implements the Arrayable
  * and Stringable interfaces.
- * 
+ *
  * @version 0.1.0
  */
 abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
@@ -78,17 +78,21 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
      * Constructor for the AbstractEntity class.
      *
      * @param array|null $data Optional array of data to initialize the entity.
+     *
+     * @throws Exception
      */
     public function __construct(?array $data = null, ?AbstractTable $dataTable = null) {
         if (!is_null($data)) $this->updateData($data);
         if (!is_null($dataTable)) $this->dataTable = $dataTable;
         elseif (isset($this->dataTableClass)) $this->dataTable = new $this->dataTableClass;
 
-        if (isset($this->dataTable)) $this->primaryId = $this->dataTable->getPrimaryId();
+        if (isset($this->dataTable)) $this->primaryId = $this->dataTable->primaryId;
     }
 
     /**
      * Retrieves the primary ID of the entity.
+     *
+     * @deprecated Use primaryId property instead.
      *
      * @return string The primary ID of the entity.
      */
@@ -129,7 +133,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
      *
      * This method persists the current state of the entity to the database.
      * It returns a boolean indicating whether the save operation was successful.
-     * 
+     *
      * @return bool True if the entity was successfully saved, false otherwise.
      */
     public function save(): bool {

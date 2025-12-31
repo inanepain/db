@@ -26,6 +26,7 @@
 
 * *update*: `Where` can handle basic strings and key => value arrays.
 * *update*: `AbstractTable` supports `Where` objects.
+* *new*: Added support to get a prepared statement with placeholders that can be executed with `key` => `value` data.
 
 :leveloffset!:
 :leveloffset: +2

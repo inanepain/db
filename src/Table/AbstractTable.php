@@ -77,8 +77,10 @@ abstract class AbstractTable {
     /**
      * @var string $primaryId The primary identifier for the table.
      */
-    protected string $primaryId;
-
+    protected(set) string $primaryId {
+        get => $this->primaryId;
+        set => $this->primaryId = $value;
+    }
     /**
      * Indicates whether the primary key of the table should auto-increment.
      *
@@ -118,6 +120,8 @@ abstract class AbstractTable {
     #region database table methods
     /**
      * Retrieves the primary ID of the table.
+     *
+     * @deprecated Use primaryId property instead.
      *
      * @return string The primary ID as a string.
      */
@@ -170,6 +174,7 @@ abstract class AbstractTable {
         $qb = $this->getQueryBuilder()->select($this->table);
 
         if ($query instanceof Where) {
+            $data = $query->getData();
             $qb->whereReplace($query);
         } elseif (!is_string($query)) {
             foreach ($query as $key => $value) {
@@ -271,7 +276,7 @@ abstract class AbstractTable {
 
             $keys = implode(', ', $keys);
 
-            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE " . $entity->getPrimaryId() . " = :" . $entity->getPrimaryId();
+            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE " . $entity->primaryId . " = :" . $entity->primaryId;
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
@@ -281,7 +286,7 @@ abstract class AbstractTable {
         foreach ($array as $key => $value) {
             $data[":$key"] = $value;
         }
-        $data[':' . $entity->getPrimaryId()] = $entity->getPrimaryIdValue();
+        $data[':' . $entity->primaryId] = $entity->getPrimaryIdValue();
 
         return $stmt->execute($data) === false ? false : $this->fetch($entity->getPrimaryIdValue());
     }
@@ -295,12 +300,12 @@ abstract class AbstractTable {
      */
     public function delete(AbstractEntity $entity): bool {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
-            $sql  = "DELETE FROM `" . $this->table . "` WHERE " . $entity->getPrimaryId() . " = :" . $entity->getPrimaryId();
+            $sql  = "DELETE FROM `" . $this->table . "` WHERE " . $entity->primaryId . " = :" . $entity->primaryId;
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
         $stmt = $this->statement[__FUNCTION__];
-        return $stmt->execute([':' . $entity->getPrimaryId() => $entity->getPrimaryIdValue()]);
+        return $stmt->execute([':' . $entity->primaryId => $entity->getPrimaryIdValue()]);
     }
 
     #endregion

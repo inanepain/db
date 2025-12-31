@@ -38,6 +38,8 @@ class Where implements Stringable {
 	 */
 	protected array $whereClauses = [];
 
+    protected array $params = [];
+
 	/**
 	 * Constructor for the Where class.
 	 *
@@ -97,6 +99,8 @@ class Where implements Stringable {
 	 * @return self The current instance for method chaining.
 	 */
 	public function addWhereClause(WhereClause $where, bool $or = false): self {
+        $this->params[':' . $where->getField()] = $where->getValue();
+
 		$join = $or ? ' or ' : ' and ';
 		$this->whereClauses[] = [empty($this->whereClauses) ? '' : $join, $where];
 
@@ -123,5 +127,16 @@ class Where implements Stringable {
         $where = '';
         foreach($this->whereClauses as $clause) $where .= $clause[0] . $clause[1]->prepare();
         return $where;
+    }
+
+    /**
+     * Retrieves the data stored in the object's parameters.
+     *
+     * Used for executing prepared statements with parameters.
+     *
+     * @return array The array of parameters.
+     */
+    public function getData(): array {
+        return $this->params;
     }
 }
