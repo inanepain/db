@@ -43,6 +43,8 @@ use function is_numeric;
 use function array_first;
 use function is_string;
 
+use function substr;
+use function var_dump;
 use const false;
 use const null;
 
@@ -170,16 +172,16 @@ abstract class AbstractTable {
         if ($query instanceof Where) {
             $qb->whereReplace($query);
         } elseif (!is_string($query)) {
-            foreach ($query as $key => $value)
+            foreach ($query as $key => $value) {
                 $qb->where($key, $value, 'like');
-            // $where = new Where($query);
-            // $qb->whereReplace($where);
+                $data[":$key"] = $value;
+            }
         } else {
             $parts = explode(' ', $query, 3);
             $qb->where($parts[0], $parts[2], $parts[1]);
         }
 
-        $stmt = static::$db->getDriver()->prepare((string)$qb);
+        $stmt = static::$db->getDriver()->prepare($qb->prepare());
         $stmt->execute($data);
         return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
     }

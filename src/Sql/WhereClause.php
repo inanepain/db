@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Inane\Db\Sql;
 
 use Stringable;
+use function is_int;
 
 /**
  * WhereClause
@@ -71,6 +72,15 @@ class WhereClause implements Stringable {
     public function __toString(): string {
         $quote = is_int($this->value) ? '' : "'";
         return "$this->field $this->operator $quote$this->value$quote";
+    }
+
+    /**
+     * Prepares the SQL fragment for a where clause with a placeholder
+     *
+     * @return string the prepared where clause
+     */
+    public function prepare(): string {
+        return "$this->field $this->operator :$this->field";
     }
 
     /**

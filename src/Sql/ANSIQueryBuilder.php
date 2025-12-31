@@ -38,7 +38,7 @@ use const null;
  * the builder steps a little bit differently from the others.
  *
  * This Concrete Builder can build SQL queries compatible with ANSI SQL.
- * 
+ *
  * **This is also used as a good base for most of the other Builders.**
  *
  * @version 1.0.0
@@ -139,6 +139,23 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
 	#endregion Query Methods
 
 	#region Output
+    /**
+     * Prepares and returns the complete SQL query string with placeholders.
+     *
+     * @return string The fully constructed SQL query string.
+     */
+    public function prepare(): string {
+        $query = $this->query;
+        $sql = $query->base;
+        if ($query->offsetExists('where'))
+            $sql .= ' WHERE ' . $query->where->prepare();
+
+        if ($query->offsetExists('limit'))
+            $sql .= $query->limit;
+
+        return $sql . ';';
+    }
+
 	/**
 	 * Get the final query string.
 	 *

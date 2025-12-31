@@ -113,4 +113,15 @@ class Where implements Stringable {
 		foreach($this->whereClauses as $clause) $where .= implode('', $clause);
 		return $where;
 	}
+
+    /**
+     * Prepares and returns a string representation of the where clauses with placeholders.
+     *
+     * @return string The concatenated string of where clauses after processing each clause.
+     */
+    public function prepare(): string {
+        $where = '';
+        foreach($this->whereClauses as $clause) $where .= $clause[0] . $clause[1]->prepare();
+        return $where;
+    }
 }

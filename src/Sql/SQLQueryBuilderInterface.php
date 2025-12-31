@@ -70,4 +70,11 @@ interface SQLQueryBuilderInterface extends Stringable {
     // +100 other SQL syntax methods...
 
     public function getSQL(): string;
+
+    /**
+     * Prepares and returns the complete SQL query string with placeholders.
+     *
+     * @return string The fully constructed SQL query string.
+     */
+    public function prepare(): string;
 }

@@ -158,4 +158,11 @@ class SQLQueryBuilder implements SQLQueryBuilderInterface {
 	public function __toString(): string {
 		return $this->getSQL();
 	}
+
+    /**
+     * @return string
+     */
+    public function prepare(): string {
+        return '';
+    }
 }
