@@ -181,6 +181,7 @@ abstract class AbstractTable {
             $qb->where($parts[0], $parts[2], $parts[1]);
         }
 
+        // Use query builder to prepare the statement with placeholders
         $stmt = static::$db->getDriver()->prepare($qb->prepare());
         $stmt->execute($data);
         return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
