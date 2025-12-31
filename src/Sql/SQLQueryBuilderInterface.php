@@ -77,4 +77,13 @@ interface SQLQueryBuilderInterface extends Stringable {
      * @return string The fully constructed SQL query string.
      */
     public function prepare(): string;
+
+    /**
+     * Retrieves key-value data from the query's 'where' clause.
+     *
+     * To be used with prepared statements and parameter binding.
+     *
+     * @return array The key-value data from the 'where' clause, or an empty array if it does not exist.
+     */
+    public function getKeyValueData(): array;
 }

@@ -124,11 +124,13 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
 		return $this;
 	}
 
-	/**
-	 * Add a LIMIT constraint.
-	 */
+    /**
+     * Add a LIMIT constraint.
+     *
+     * @throws Exception
+     */
 	public function limit(int $limit, ?int $offset = null): SQLQueryBuilderInterface {
-		if (!in_array($this->query->type, ['select']))
+		if ($this->query->type !== 'select')
 			throw new Exception('LIMIT can only be added to SELECT');
 
 		if (!is_null($offset)) $this->query->limit = " OFFSET $offset ROWS";
@@ -154,6 +156,17 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
             $sql .= $query->limit;
 
         return $sql . ';';
+    }
+
+    /**
+     * Retrieves key-value data from the query's 'where' clause.
+     *
+     * To be used with prepared statements and parameter binding.
+     *
+     * @return array The key-value data from the 'where' clause, or an empty array if it does not exist.
+     */
+    public function getKeyValueData(): array {
+        return $this?->query?->where?->getData() ?? [];
     }
 
 	/**
@@ -193,7 +206,7 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
 	 * @return string The resulting string of parsed fields, separated by commas, or "*" if no fields are provided.
 	 */
 	protected function parseFields(array $fields): string {
-		return count($fields) == 0 ? '*' : implode(', ', $fields);
+		return count($fields) === 0 ? '*' : implode(', ', $fields);
 	}
 	#endregion Utility
 }

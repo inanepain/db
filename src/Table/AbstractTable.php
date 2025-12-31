@@ -170,25 +170,22 @@ abstract class AbstractTable {
      * @return array|AbstractEntity[] The search results as an array.
      */
     public function search(array|Where|string $query): array {
-        $data = [];
         $qb = $this->getQueryBuilder()->select($this->table);
 
         if ($query instanceof Where) {
-            $data = $query->getData();
             $qb->whereReplace($query);
         } elseif (!is_string($query)) {
             foreach ($query as $key => $value) {
                 $qb->where($key, $value, 'like');
-                $data[":$key"] = $value;
             }
         } else {
-            $parts = explode(' ', $query, 3);
-            $qb->where($parts[0], $parts[2], $parts[1]);
+            [$field, $operator, $value] = explode(' ', $query, 3);
+            $qb->where($field, $value, $operator);
         }
 
         // Use query builder to prepare the statement with placeholders
         $stmt = static::$db->getDriver()->prepare($qb->prepare());
-        $stmt->execute($data);
+        $stmt->execute($qb->getKeyValueData());
         return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
     }
 
