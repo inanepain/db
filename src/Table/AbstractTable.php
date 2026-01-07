@@ -24,27 +24,23 @@ declare(strict_types=1);
 
 namespace Inane\Db\Table;
 
-use Inane\Db\Entity\AbstractEntity;
-use Inane\Db\Sql\SQLQueryBuilderInterface;
-use Inane\Db\Sql\Where;
-use PDO;
 use Inane\Db\Adapter\{
     Adapter,
-    AdapterInterface
-};
+    AdapterInterface};
+use Inane\Db\Entity\AbstractEntity;
+use Inane\Db\Query\QueryBuilderInterface;
+use Inane\Db\Sql\{
+    SQLQueryBuilderInterface,
+    Where};
 use Inane\Stdlib\Array\OptionsInterface;
-
+use PDO;
+use function array_first;
 use function array_key_exists;
 use function array_keys;
 use function explode;
 use function implode;
-use function intval;
 use function is_numeric;
-use function array_first;
 use function is_string;
-
-use function substr;
-use function var_dump;
 use const false;
 use const null;
 
@@ -115,6 +111,15 @@ abstract class AbstractTable {
 	public function getQueryBuilder(): SQLQueryBuilderInterface {
 		return $this::$db->getDriver()->getQueryBuilder();
 	}
+
+    /**
+     * Returns an instance of QueryBuilderInterface.
+     *
+     * @return QueryBuilderInterface Returns an instance of QueryBuilderInterface.
+     */
+    public function queryBuilder(): QueryBuilderInterface {
+        return $this::$db->getDriver()->queryBuilder()->table($this->table);
+    }
 	#endregion Utility Methods
 
     #region database table methods
@@ -164,6 +169,27 @@ abstract class AbstractTable {
 
     /**
      * Searches the database based on the given query.
+     *
+     * @param array $conditions The search query, which can be either an array or a string.
+     *
+     * @return array|AbstractEntity[] The search results as an array.
+     */
+    public function find(array $conditions): array {
+        $qb = $this->queryBuilder()->select();
+
+        if (!is_array(array_first($conditions))) $conditions = [$conditions];
+        $qb->wheres($conditions);
+
+        // Use query builder to prepare the statement with placeholders
+        $stmt = static::$db->getDriver()->prepare($qb->toSql());
+        $stmt->execute($qb->getBindings());
+        return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+    }
+
+    /**
+     * Searches the database based on the given query.
+     *
+     * @deprecated Use find() instead.
      *
      * @param array|string $query The search query, which can be either an array or a string.
      *
@@ -250,7 +276,7 @@ abstract class AbstractTable {
             return false;
 
         $id = static::$db->getDriver()->lastInsertId();
-        $id = is_numeric($id) ? intval($id) : $id;
+        $id = is_numeric($id) ? (int)$id : $id;
 
         return $this->fetch($id);
     }
@@ -301,8 +327,7 @@ abstract class AbstractTable {
             $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
         }
 
-        $stmt = $this->statement[__FUNCTION__];
-        return $stmt->execute([':' . $entity->primaryId => $entity->getPrimaryIdValue()]);
+        return $this->statement[__FUNCTION__]->execute([':' . $entity->primaryId => $entity->getPrimaryIdValue()]);
     }
 
     #endregion

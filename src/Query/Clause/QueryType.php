@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\db
@@ -20,16 +20,13 @@
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
-namespace Inane\Db\Sql;
+namespace Inane\Db\Query\Clause;
 
-/**
- * This Concrete Builder is compatible with SQLite.
- *
- * For the currently supported options we can inherit directly from Postgres.
- *
- * @version 1.0.0
- */
-class SqliteQueryBuilder extends PostgresQueryBuilder {
+enum QueryType: string {
+    case SELECT = 'SELECT';
+    case INSERT = 'INSERT';
+    case UPDATE = 'UPDATE';
+    case DELETE = 'DELETE';
 }

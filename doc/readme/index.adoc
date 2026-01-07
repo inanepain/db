@@ -36,6 +36,10 @@ include::part/usage.adoc[leveloffset=+1]
 
 <<<
 
+include::part/wheres.adoc[leveloffset=+1]
+
+<<<
+
 == Revision
 
  version: $Id$ ($Date$)

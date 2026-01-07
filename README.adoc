@@ -50,31 +50,429 @@ composer require {pkg-id}
 
 [source,php]
 ----
-$qb = new SQLQueryBuilder();
-$query = $qb
-    ->select('users', ['name', 'email', 'password'])
-    ->where('age', 18, '>')
-    ->where('age', 30, '<')
-    ->limit(10, 20);
+// Usage Examples with preconfigured builders:
 
-echo "-- Testing MySQL query builder:\n";
-echo $qb->getSQLFor(new MysqlQueryBuilder());
+echo "=== MySQL Example ===\n";
+$query = (new MySQLQueryBuilder())
+    ->table('users')
+    ->select('id', 'name', 'email')
+    ->where('status', 'active')
+    ->where('age', '>', 18)
+    ->orderBy('created_at', OrderDirection::DESC)
+    ->limit(10);
 
-echo "\n\n";
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
 
-echo "-- Testing PostgresSQL query builder:\n";
-echo $qb->getSQLFor(new PostgresQueryBuilder());
+echo "\n=== All WHERE Types with wheres() Method ===\n";
+
+$query = (new MySQLQueryBuilder())
+    ->table('products')
+    ->select('*')
+    ->wheres([
+        // Basic where (simple format)
+        ['category', 'electronics'],
+        // Basic where with operator
+        ['price', '>', 100],
+        // WHERE IN
+        ['type' => 'in', 'column' => 'brand', 'values' => ['Apple', 'Samsung', 'Google']],
+        // WHERE NULL
+        ['type' => 'null', 'column' => 'discontinued_at'],
+        // WHERE NOT NULL
+        ['type' => 'not_null', 'column' => 'description'],
+        // WHERE LIKE
+        ['type' => 'like', 'column' => 'name', 'value' => 'iPhone%'],
+        // WHERE BETWEEN
+        ['type' => 'between', 'column' => 'rating', 'values' => [4.0, 5.0]],
+        // With OR boolean
+        ['type' => 'basic', 'column' => 'featured', 'operator' => '=', 'value' => true, 'boolean' => 'OR']
+    ])
+    ->orderBy('price', OrderDirection::DESC);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== Complex Query with Mixed Conditions ===\n";
+
+$query = (new PostgreSQLQueryBuilder())
+->table('users')
+->select('id', 'name', 'email', 'status', 'country')
+->wheres([
+// Simple conditions
+['status', 'active'],
+['age', '>=', 18],
+
+// Country filter with IN
+['type' => 'in', 'column' => 'country', 'values' => ['US', 'CA', 'UK', 'AU']],
+
+// Must have email
+['type' => 'not_null', 'column' => 'email'],
+
+// Not deleted
+['type' => 'null', 'column' => 'deleted_at'],
+
+// Name search
+['type' => 'like', 'column' => 'name', 'value' => 'John%', 'boolean' => 'OR'],
+
+// Or premium member
+['type' => 'basic', 'column' => 'membership', 'value' => 'premium', 'boolean' => 'OR']
+])
+->orderBy('created_at', OrderDirection::DESC)
+->limit(25);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== Dynamic Advanced Filtering ===\n";
+
+// Simulating API request with various filter types
+
+$apiFilters = [
+    'status' => 'published',
+    'tags' => ['php', 'mysql', 'api'], // IN clause
+    'title_search' => 'Query Builder', // LIKE clause
+    'min_views' => 1000, // Greater than
+    'max_views' => 100000, // Less than (for BETWEEN)
+];
+
+$conditions = [];
+
+// Build conditions dynamically based on filter types
+if (isset($apiFilters['status'])) \{
+    $conditions[] = ['status', $apiFilters['status']];
+}
+
+if (isset($apiFilters['tags'])) \{
+    $conditions[] = [
+        'type' => 'in',
+        'column' => 'tag',
+        'values' => $apiFilters['tags']
+    ];
+}
+
+if (isset($apiFilters['title_search'])) \{
+    $conditions[] = [
+        'type' => 'like',
+        'column' => 'title',
+        'value' => '%' . $apiFilters['title_search'] . '%'
+    ];
+}
+
+if (isset($apiFilters['min_views']) && isset($apiFilters['max_views'])) \{
+    $conditions[] = [
+        'type' => 'between',
+        'column' => 'views',
+        'values' => [$apiFilters['min_views'], $apiFilters['max_views']]
+    ];
+}
+
+// Must not be deleted
+
+$conditions[] = ['type' => 'null', 'column' => 'deleted_at'];
+
+$query = (new MySQLQueryBuilder())
+    ->table('articles')
+    ->select('id', 'title', 'status', 'views')
+    ->wheres($conditions)
+    ->orderBy('views', OrderDirection::DESC)
+    ->limit(10);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== Using Interface for Type Hinting ===\n";
+
+class UserRepository \{
+    public function __construct(
+    private QueryBuilderInterface $queryBuilder
+    ) \{
+    }
+
+    public function findActiveUsers(int $limit = 10): string \{
+        return $this->queryBuilder
+            ->table('users')
+            ->select('id', 'name', 'email')
+            ->where('status', 'active')
+            ->orderBy('created_at', OrderDirection::DESC)
+            ->limit($limit)
+            ->toSql();
+    }
+
+    public function findUsersByCountry(array $countries): string \{
+        return $this->queryBuilder
+            ->table('users')
+            ->select('*')
+            ->whereIn('country', $countries)
+            ->toSql();
+    }
+}
+
+// Can inject any builder that implements the interface
+
+$mysqlRepo = new UserRepository(new MySQLQueryBuilder());
+
+$pgsqlRepo = new UserRepository(new PostgreSQLQueryBuilder());
+
+$sqliteRepo = new UserRepository(new SQLiteQueryBuilder());
+
+echo "MySQL Query:\n";
+
+echo $mysqlRepo->findActiveUsers(5) . "\n\n";
+
+echo "PostgreSQL Query:\n";
+
+echo $pgsqlRepo->findUsersByCountry(['US', 'CA', 'UK']) . "\n\n";
+
+echo "SQLite Query:\n";
+echo $sqliteRepo->findActiveUsers(10) . "\n";
+
+echo "\n=== Multiple WHERE Clauses Example ===\n";
+
+$query = (new MySQLQueryBuilder())
+    ->table('products')
+    ->select('*')
+    ->wheres([
+        ['category', 'electronics'], // Simple: column = value
+        ['price', '>', 100], // With operator
+        ['stock', '>=', 10], // Another with operator
+        ['featured', '=', true, 'OR'] // With OR boolean
+    ])
+    ->orderBy('price', OrderDirection::ASC);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== Dynamic Filter Building ===\n";
+
+// Example: Building filters from user input
+$filters = [
+    'status' => 'active',
+    'min_age' => 18,
+    'country' => 'US'
+];
+
+$conditions = [];
+foreach ($filters as $key => $value) \{
+    if ($key === 'min_age') \{
+        $conditions[] = ['age', '>=', $value];
+    } else \{
+        $conditions[] = [$key, $value];
+    }
+}
+
+$query = (new PostgreSQLQueryBuilder())
+    ->table('users')
+    ->select('id', 'name', 'email', 'age', 'country')
+    ->wheres($conditions)
+    ->limit(50);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== Mixed AND/OR Conditions ===\n";
+
+$query = (new MySQLQueryBuilder())
+    ->table('orders')
+    ->select('*')
+    ->wheres([
+        ['status', 'pending'],
+        ['priority', '>', 5],
+        ['customer_type', 'premium', 'OR'],
+        ['total', '>', 1000, 'OR']
+    ])
+    ->orderBy('created_at', OrderDirection::DESC);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== PostgreSQL Example ===\n";
+
+$query = (new PostgreSQLQueryBuilder())
+    ->table('orders')
+    ->select(['orders.id', 'orders.total', 'users.name'])
+    ->join('users', 'orders.user_id', 'users.id')
+    ->where('orders.status', 'completed')
+    ->whereBetween('orders.total', [100, 1000])
+    ->orderBy('orders.created_at', 'desc');
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== SQLite Example ===\n";
+
+$query = (new SQLiteQueryBuilder())
+    ->table('products')
+    ->select('category', 'COUNT(*) as total', 'AVG(price) as avg_price')
+    ->where('status', 'active')
+    ->whereNotNull('price')
+    ->groupBy('category')
+    ->having('COUNT(*)', '>', 10)
+    ->limit(5);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== ANSI SQL Example ===\n";
+
+$query = (new ANSIQueryBuilder())
+    ->table('employees')
+    ->select('department', 'salary')
+    ->whereLike('name', 'John%')
+    ->orderBy('salary', OrderDirection::DESC)
+    ->limit(20)
+    ->offset(10);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== INSERT with Boolean (SQLite) ===\n";
+$query = (new SQLiteQueryBuilder())
+    ->table('users')
+
+->insert([
+    'name' => 'Jane Doe',
+    'email' => 'jane@example.com',
+    'is_active' => true,
+    'is_admin' => false
+]);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
+
+echo "\n=== Complex Query with Multiple Joins (MySQL) ===\n";
+
+$query = (new MySQLQueryBuilder())
+    ->table('orders')
+    ->select(['orders.id', 'users.name', 'products.title', 'order_items.quantity'])
+    ->join('users', 'orders.user_id', 'users.id')
+    ->join('order_items', 'orders.id', 'order_items.order_id')
+    ->join('products', 'order_items.product_id', 'products.id')
+    ->where('orders.status', 'shipped')
+    ->whereIn('orders.shipping_country', ['US', 'CA', 'UK'])
+    ->orderBy('orders.created_at', OrderDirection::DESC)
+    ->limit(25);
+
+echo $query->toSql() . "\n";
+print_r($query->getBindings());
 ----
 
 Which should give you:
 
 [source,sql]
 ----
--- Testing MySQL query builder:
-SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10, 20;
+=== MySQL Example ===
 
--- Testing PostgresSQL query builder:
-SELECT name, email, password FROM users WHERE age > 18 AND age < 30 LIMIT 10 OFFSET 20;
+SELECT `id`, `name`, `email` FROM `users` WHERE `status` = ? AND `age` > ? ORDER BY `created_at` DESC LIMIT 10
+
+Array
+(
+[0] => active
+[1] => 18
+)
+
+=== Using Interface for Type Hinting ===
+
+MySQL Query:
+
+SELECT `id`, `name`, `email` FROM `users` WHERE `status` = ? ORDER BY `created_at` DESC LIMIT 5
+
+PostgreSQL Query:
+
+SELECT * FROM "users" WHERE "country" IN (?, ?, ?)
+
+SQLite Query:
+
+SELECT "id", "name", "email" FROM "users" WHERE "status" = ? ORDER BY "created_at" DESC LIMIT 10
+
+=== Multiple WHERE Clauses Example ===
+
+SELECT * FROM `products` WHERE `category` = ? AND `price` > ? AND `stock` >= ? OR `featured` = ? ORDER BY `price` ASC
+
+Array
+(
+[0] => electronics
+[1] => 100
+[2] => 10
+[3] => 1
+)
+
+=== Dynamic Filter Building ===
+
+SELECT "id", "name", "email", "age", "country" FROM "users" WHERE "status" = ? AND "age" >= ? AND "country" = ? LIMIT 50
+
+Array
+(
+[0] => active
+[1] => 18
+[2] => US
+)
+
+=== Mixed AND/OR Conditions ===
+
+SELECT * FROM `orders` WHERE `status` = ? AND `priority` > ? AND `customer_type` premium ? OR `total` > ? ORDER BY `created_at` DESC
+
+Array
+(
+[0] => pending
+[1] => 5
+[2] => OR
+[3] => 1000
+)
+
+=== PostgreSQL Example ===
+
+SELECT "orders"."id", "orders"."total", "users"."name" FROM "orders" INNER JOIN "users" ON "orders"."user_id" = "users"."id" WHERE "orders"."status" = ? AND "orders"."total" BETWEEN ? AND ? ORDER BY "orders"."created_at" DESC
+
+Array
+(
+[0] => completed
+[1] => 100
+[2] => 1000
+)
+
+=== SQLite Example ===
+
+SELECT "category", "COUNT(*) as total", "AVG(price) as avg_price" FROM "products" WHERE "status" = ? AND "price" IS NOT NULL GROUP BY "category" HAVING "COUNT(*)" > ? LIMIT 5
+
+Array
+(
+[0] => active
+[1] => 10
+)
+
+=== ANSI SQL Example ===
+
+SELECT "department", "salary" FROM "employees" WHERE "name" LIKE ? ORDER BY "salary" DESC OFFSET 10 ROWS FETCH NEXT 20 ROWS ONLY
+
+Array
+(
+[0] => John%
+)
+
+=== INSERT with Boolean (SQLite) ===
+
+INSERT INTO "users" ("name", "email", "is_active", "is_admin") VALUES (?, ?, ?, ?)
+
+Array
+(
+[0] => Jane Doe
+[1] => jane@example.com
+[2] => 1
+[3] => 0
+)
+
+=== Complex Query with Multiple Joins (MySQL) ===
+
+SELECT `orders`.`id`, `users`.`name`, `products`.`title`, `order_items`.`quantity` FROM `orders` INNER JOIN `users` ON `orders`.`user_id` = `users`.`id` INNER JOIN `order_items` ON `orders`.`id` = `order_items`.`order_id` INNER JOIN `products` ON `order_items`.`product_id` = `products`.`id` WHERE `orders`.`status` = ? AND `orders`.`shipping_country` IN (?, ?, ?) ORDER BY `orders`.`created_at` DESC LIMIT 25
+
+Array
+(
+[0] => shipped
+[1] => US
+[2] => CA
+[3] => UK
+)
+
 ----
 
 :leveloffset: +2
@@ -109,6 +507,89 @@ SELECT fortune FROM fortunes WHERE views > 10 and favourite = 1 and name = 'Bob'
 ----
 
 :leveloffset: 1
+
+:leveloffset!:
+
+<<<
+
+:leveloffset: +1
+
+= Wheres
+
+Perfect! I've updated the `+wheres()+` method to support all WHERE clause types. Here's what's now available:
+
+*Supported WHERE Types:*
+
+. *Basic WHERE* (simple format):
+
+[source,php]
+----
+['column', 'value']                    // column = value
+['column', 'operator', 'value']        // column operator value
+['column', 'operator', 'value', 'OR']  // with OR boolean
+----
+
+[start=2]
+. *WHERE IN*:
+
+[source,php]
+----
+['type' => 'in', 'column' => 'status', 'values' => ['active', 'pending']]
+----
+
+[start=3]
+. *WHERE NULL*:
+
+[source,php]
+----
+['type' => 'null', 'column' => 'deleted_at']
+----
+
+[start=4]
+. *WHERE NOT NULL*:
+
+[source,php]
+----
+['type' => 'not_null', 'column' => 'email']
+----
+
+[start=5]
+. *WHERE LIKE*:
+
+[source,php]
+----
+['type' => 'like', 'column' => 'name', 'value' => 'John%']
+----
+
+[start=6]
+. *WHERE BETWEEN*:
+
+[source,php]
+----
+['type' => 'between', 'column' => 'price', 'values' => [10, 100]]
+----
+
+*All types support the `+'boolean'+` parameter* to add OR logic:
+
+[source,php]
+----
+['type' => 'in', 'column' => 'status', 'values' => [...], 'boolean' => 'OR']
+----
+
+*Practical Example:*
+
+[source,php]
+----
+$query->wheres([
+    ['status', 'active'],                                    // Basic
+    ['price', '>', 100],                                     // Basic with operator
+    ['type' => 'in', 'column' => 'brand', 'values' => []], // IN
+    ['type' => 'null', 'column' => 'deleted_at'],          // NULL
+    ['type' => 'like', 'column' => 'name', 'value' => '%search%'] // LIKE
+]);
+----
+
+This makes building complex queries from dynamic filters incredibly powerful and flexible!
 
 :leveloffset!:
 

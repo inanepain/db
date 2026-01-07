@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
-use Inane\Db\Sql\SqliteQueryBuilder;
+use Inane\Db\Query\QueryBuilderInterface;
+use Inane\Db\Query\SQLiteQueryBuilder;
+use Inane\Db\Sql\SqliteSQLQueryBuilder;
 use Inane\Db\Sql\SQLQueryBuilderInterface;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
@@ -47,6 +49,15 @@ class SqliteDriver extends AbstractDriver {
 	 * @return SQLQueryBuilderInterface Returns an instance of SQLQueryBuilderInterface.
 	 */
 	public function getQueryBuilder(): SQLQueryBuilderInterface {
-		return new SqliteQueryBuilder();
+		return new SqliteSQLQueryBuilder();
 	}
+
+    /**
+     * Retrieves an instance of the QueryBuilderInterface.
+     *
+     * @return QueryBuilderInterface An instance of a class implementing QueryBuilderInterface.
+     */
+    public function queryBuilder(): QueryBuilderInterface {
+        return new SQLiteQueryBuilder();
+    }
 }

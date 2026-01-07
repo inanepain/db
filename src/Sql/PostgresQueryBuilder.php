@@ -35,7 +35,7 @@ use const null;
  *
  * @version 1.0.0
  */
-class PostgresQueryBuilder extends ANSIQueryBuilder {
+class PostgresQueryBuilder extends ANSISQLQueryBuilder {
     /**
      * Among other things, PostgreSQL has slightly different LIMIT syntax.
      */

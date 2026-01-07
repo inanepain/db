@@ -1,0 +1,76 @@
+= Wheres
+
+Perfect! I've updated the `+wheres()+` method to support all WHERE clause types. Here's what's now available:
+
+*Supported WHERE Types:*
+
+. *Basic WHERE* (simple format):
+
+[source,php]
+----
+['column', 'value']                    // column = value
+['column', 'operator', 'value']        // column operator value
+['column', 'operator', 'value', 'OR']  // with OR boolean
+----
+
+[start=2]
+. *WHERE IN*:
+
+[source,php]
+----
+['type' => 'in', 'column' => 'status', 'values' => ['active', 'pending']]
+----
+
+[start=3]
+. *WHERE NULL*:
+
+[source,php]
+----
+['type' => 'null', 'column' => 'deleted_at']
+----
+
+[start=4]
+. *WHERE NOT NULL*:
+
+[source,php]
+----
+['type' => 'not_null', 'column' => 'email']
+----
+
+[start=5]
+. *WHERE LIKE*:
+
+[source,php]
+----
+['type' => 'like', 'column' => 'name', 'value' => 'John%']
+----
+
+[start=6]
+. *WHERE BETWEEN*:
+
+[source,php]
+----
+['type' => 'between', 'column' => 'price', 'values' => [10, 100]]
+----
+
+*All types support the `+'boolean'+` parameter* to add OR logic:
+
+[source,php]
+----
+['type' => 'in', 'column' => 'status', 'values' => [...], 'boolean' => 'OR']
+----
+
+*Practical Example:*
+
+[source,php]
+----
+$query->wheres([
+    ['status', 'active'],                                    // Basic
+    ['price', '>', 100],                                     // Basic with operator
+    ['type' => 'in', 'column' => 'brand', 'values' => []], // IN
+    ['type' => 'null', 'column' => 'deleted_at'],          // NULL
+    ['type' => 'like', 'column' => 'name', 'value' => '%search%'] // LIKE
+]);
+----
+
+This makes building complex queries from dynamic filters incredibly powerful and flexible!

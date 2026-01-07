@@ -20,19 +20,18 @@ declare(strict_types = 1);
 namespace Inane\Db\Sql;
 
 use Stringable;
-
+use function array_first;
 use function implode;
 use function is_array;
-use function array_first;
 
 /**
- * Where
+ * Clause
  *
  * @version 1.0.0
  */
 class Where implements Stringable {
 	/**
-	 * Where clauses
+	 * Clause clauses
 	 *
 	 * @var \Inane\Db\Sql\WhereClause[]
 	 */
@@ -41,13 +40,13 @@ class Where implements Stringable {
     protected array $params = [];
 
 	/**
-	 * Constructor for the Where class.
+	 * Constructor for the Clause class.
 	 *
 	 * A collection of where clauses can be passed to the constructor to initialise the object.
 	 * Each where clause can be passed as an array of arguments or as a WhereClause object.
 	 * If an array of arrays is passed, it will be treated as a nested where clause and handled as an **OR** condition.
 	 *
-	 * @param array|array[]|string[] $whereGrp An optional array of conditions to initialise the Where object with.
+	 * @param array|array[]|string[] $whereGrp An optional array of conditions to initialise the Clause object with.
 	 */
 	public function __construct(array $whereGrp = []) {
 		$this->parseWhereCollection($whereGrp);

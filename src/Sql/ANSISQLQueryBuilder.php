@@ -26,7 +26,6 @@ namespace Inane\Db\Sql;
 
 use Inane\Stdlib\Exception\Exception;
 use Inane\Stdlib\Options;
-
 use function count;
 use function implode;
 use function in_array;
@@ -43,7 +42,7 @@ use const null;
  *
  * @version 1.0.0
  */
-class ANSIQueryBuilder implements SQLQueryBuilderInterface {
+class ANSISQLQueryBuilder implements SQLQueryBuilderInterface {
 	/**
 	 * Stores the various query parts
 	 *
@@ -113,8 +112,8 @@ class ANSIQueryBuilder implements SQLQueryBuilderInterface {
 	/**
 	 * Adds one or more conditions to the "WHERE" clause of the SQL query.
 	 *
-	 * @param array|Where $whereGrp The conditions to be added. Can be an instance of Where
-	 *                             or an array of conditions to initialize a new Where object.
+	 * @param array|Where $whereGrp The conditions to be added. Can be an instance of Clause
+	 *                             or an array of conditions to initialize a new Clause object.
 	 *
 	 * @return SQLQueryBuilderInterface The current instance of the query builder for method chaining.
 	 */

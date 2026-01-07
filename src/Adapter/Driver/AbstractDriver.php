@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
-use Inane\Db\Sql\ANSIQueryBuilder;
+use Inane\Db\Query\ANSIQueryBuilder;
+use Inane\Db\Query\QueryBuilderInterface;
+use Inane\Db\Sql\ANSISQLQueryBuilder;
 use Inane\Db\Sql\SQLQueryBuilderInterface;
 use PDO;
 
@@ -47,6 +49,15 @@ abstract class AbstractDriver extends PDO implements DriverInterface {
 	 * @return SQLQueryBuilderInterface
 	 */
 	public function getQueryBuilder(): SQLQueryBuilderInterface {
-		return new ANSIQueryBuilder();
+		return new ANSISQLQueryBuilder();
 	}
+
+    /**
+     * Retrieves an instance of the QueryBuilderInterface.
+     *
+     * @return QueryBuilderInterface An instance of a class implementing QueryBuilderInterface.
+     */
+    public function queryBuilder(): QueryBuilderInterface {
+        return new ANSIQueryBuilder();
+    }
 }

@@ -24,11 +24,12 @@ declare(strict_types=1);
 
 namespace Inane\Db\Adapter\Driver;
 
-use Inane\Db\Sql\MysqlQueryBuilder;
+use Inane\Db\Query\MySQLQueryBuilder;
+use Inane\Db\Query\QueryBuilderInterface;
+use Inane\Db\Sql\MysqlSQLQueryBuilder;
 use Inane\Db\Sql\SQLQueryBuilderInterface;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
-
 use function array_intersect_key;
 use function implode;
 
@@ -55,6 +56,15 @@ class MysqlDriver extends AbstractDriver {
 	 * @return SQLQueryBuilderInterface
 	 */
 	public function getQueryBuilder(): SQLQueryBuilderInterface {
-		return new MysqlQueryBuilder();
+		return new MysqlSQLQueryBuilder();
 	}
+
+    /**
+     * Retrieves an instance of the QueryBuilderInterface.
+     *
+     * @return QueryBuilderInterface An instance of a class implementing QueryBuilderInterface.
+     */
+    public function queryBuilder(): QueryBuilderInterface {
+        return new MySQLQueryBuilder();
+    }
 }

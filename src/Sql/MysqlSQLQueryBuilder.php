@@ -36,7 +36,7 @@ use const null;
  *
  * @version 1.0.0
  */
-class MysqlQueryBuilder extends ANSIQueryBuilder {
+class MysqlSQLQueryBuilder extends ANSISQLQueryBuilder {
     /**
      * Add a LIMIT constraint.
      */
