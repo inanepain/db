@@ -33,7 +33,6 @@ use Inane\Db\Sql\{
     SQLQueryBuilderInterface,
     Where};
 use Inane\Stdlib\Array\OptionsInterface;
-use PDO;
 use function array_first;
 use function array_key_exists;
 use function array_keys;
@@ -145,7 +144,7 @@ abstract class AbstractTable {
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
     }
 
     /**
@@ -162,7 +161,7 @@ abstract class AbstractTable {
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute([':' . $this->primaryId => $id]);
 
-        $result = $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+        $result = $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
         if (empty($result)) return false;
         else return array_first($result);
     }
@@ -183,7 +182,7 @@ abstract class AbstractTable {
         // Use query builder to prepare the statement with placeholders
         $stmt = static::$db->getDriver()->prepare($qb->toSql());
         $stmt->execute($qb->getBindings());
-        return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
     }
 
     /**
@@ -212,7 +211,7 @@ abstract class AbstractTable {
         // Use query builder to prepare the statement with placeholders
         $stmt = static::$db->getDriver()->prepare($qb->prepare());
         $stmt->execute($qb->getKeyValueData());
-        return $stmt->fetchAll(PDO::FETCH_CLASS, $this->entityClass, [null, $this]);
+        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
     }
 
     /**
