@@ -8,8 +8,8 @@
 * new: `AbstractTable::insertUpdate` uses `insert on conflict update syntax`.
 * new: `EntityPrepareMethod` method attribute indicates method to call pre db persistence.
 * new: `QueryBuilders*` are now `Stringable`.
-* new: `Drivers::getQueryBuilder` methoded added to quickly get to a builder.
-* new: `AbbstractTable::getQueryBuilder` methoded added to quickly get to a builder.
+* new: `Drivers::getQueryBuilder` method added to quickly get to a builder.
+* new: `AbbstractTable::getQueryBuilder` method added to quickly get to a builder.
 * update: moved to documentation to the new structure.
 * update: `OptionsInterface` used throughout.
 * fix: `QueryBuilders` error with null where clauses.

@@ -42,8 +42,8 @@
 * new: `AbstractTable::insertUpdate` uses `insert on conflict update syntax`.
 * new: `EntityPrepareMethod` method attribute indicates method to call pre db persistence.
 * new: `QueryBuilders*` are now `Stringable`.
-* new: `Drivers::getQueryBuilder` methoded added to quickly get to a builder.
-* new: `AbbstractTable::getQueryBuilder` methoded added to quickly get to a builder.
+* new: `Drivers::getQueryBuilder` method added to quickly get to a builder.
+* new: `AbbstractTable::getQueryBuilder` method added to quickly get to a builder.
 * update: moved to documentation to the new structure.
 * update: `OptionsInterface` used throughout.
 * fix: `QueryBuilders` error with null where clauses.
@@ -52,20 +52,8 @@
 :leveloffset: +2
 
 = 0.2.0 (2025 Apr 25)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Some helpers for database task and query construction.
-:keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
 :revnumber: 0.2.0
 :revdate: 2025-04-25
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * new: DB-Layer for database access initial basic release
 
@@ -73,20 +61,8 @@
 :leveloffset: +2
 
 = 0.1.0 (2022 Jul 22)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Some helpers for database task and query construction.
-:keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
 :revnumber: 0.1.0
 :revdate: 2022-07-22
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * initial release
 
