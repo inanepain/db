@@ -69,6 +69,11 @@ abstract class AbstractTable {
      */
     protected string $table;
 
+	/**
+	 * @var array<string, mixed> $columns An array to store the column and default values for a database table or similar structure.
+	 */
+	protected array $columns = [];
+
     /**
      * @var string $primaryId The primary identifier for the table.
      */
@@ -121,6 +126,17 @@ abstract class AbstractTable {
     }
 	#endregion Utility Methods
 
+	#region Column Methods
+	/**
+	 * Retrieves the names of all columns.
+	 *
+	 * @return array An array containing the names of the columns.
+	 */
+	public function getColumns(): array {
+		return array_keys($this->columns);
+	}
+	#endregion Column Methods
+
     #region database table methods
     /**
      * Retrieves the primary ID of the table.
@@ -140,7 +156,7 @@ abstract class AbstractTable {
      */
     public function fetchAll(): array {
         if (!array_key_exists(__FUNCTION__, $this->statement))
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare('SELECT * FROM `' . $this->table . '`');
+            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare('SELECT '. implode(', ', $this->getColumns()) .' FROM `' . $this->table . '`');
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute();
@@ -156,7 +172,7 @@ abstract class AbstractTable {
      */
     public function fetch(string|int|float $id): false|AbstractEntity {
         if (!array_key_exists(__FUNCTION__, $this->statement))
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare('SELECT * FROM `' . $this->table . '` where ' . $this->primaryId . ' = :' . $this->primaryId);
+            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare('SELECT '. implode(', ', $this->getColumns()) .' FROM `' . $this->table . '` where ' . $this->primaryId . ' = :' . $this->primaryId);
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute([':' . $this->primaryId => $id]);
