@@ -1,10 +1,10 @@
-= README: inanepain/db
+= inanepain/db image:./icon.png[title=inanepain/db,25]
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Some helpers for database task and query construction.
 :keywords: inanepain, db, database, sql, query, builder, MySQL, PostgresSQL
+:homepage: https://github.com/inanepain/db
 :copyright: Unlicense
-:homepage: https://git.cathedral.co.za:3000/inanepain/db
 :revnumber: 0.3.0
 :revdate: 2025-11-20
 :experimental:
@@ -592,9 +592,3 @@ $query->wheres([
 This makes building complex queries from dynamic filters incredibly powerful and flexible!
 
 :leveloffset!:
-
-<<<
-
-== Revision
-
- version: $Id$ ($Date$)
