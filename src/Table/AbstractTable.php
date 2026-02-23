@@ -33,6 +33,7 @@ use Inane\Db\Sql\{
     SQLQueryBuilderInterface,
     Where};
 use Inane\Stdlib\Array\OptionsInterface;
+
 use function array_first;
 use function array_key_exists;
 use function array_keys;
@@ -40,6 +41,7 @@ use function explode;
 use function implode;
 use function is_numeric;
 use function is_string;
+
 use const false;
 use const null;
 
@@ -171,11 +173,14 @@ abstract class AbstractTable {
      * @return false|AbstractEntity The entity corresponding to the given ID, or false on failure.
      */
     public function fetch(string|int|float $id): false|AbstractEntity {
-        if (!array_key_exists(__FUNCTION__, $this->statement))
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare('SELECT '. implode(', ', $this->getColumns()) .' FROM `' . $this->table . '` where ' . $this->primaryId . ' = :' . $this->primaryId);
+        if (!array_key_exists(__FUNCTION__, $this->statement)) {
+            $query = $this->queryBuilder()->select()->where($this->primaryId, '=', ':id')->toSql();
+            $stmt = static::$db->getDriver()->prepare($query);
+            $this->statement[__FUNCTION__] = $stmt;
+        }
 
         $stmt = $this->statement[__FUNCTION__];
-        $stmt->execute([':' . $this->primaryId => $id]);
+        $stmt->execute([$id]);
 
         $result = $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
         if (empty($result)) return false;

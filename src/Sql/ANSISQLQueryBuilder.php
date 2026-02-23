@@ -26,10 +26,11 @@ namespace Inane\Db\Sql;
 
 use Inane\Stdlib\Exception\Exception;
 use Inane\Stdlib\Options;
-use function count;
+
 use function implode;
 use function in_array;
 use function is_null;
+
 use const null;
 
 /**
@@ -205,7 +206,7 @@ class ANSISQLQueryBuilder implements SQLQueryBuilderInterface {
 	 * @return string The resulting string of parsed fields, separated by commas, or "*" if no fields are provided.
 	 */
 	protected function parseFields(array $fields): string {
-		return count($fields) === 0 ? '*' : implode(', ', $fields);
+		return empty($fields) ? '*' : implode(', ', $fields);
 	}
 	#endregion Utility
 }
