@@ -26,8 +26,9 @@ namespace Inane\Db\Query;
 
 use Inane\Db\Query\Clause\OrderDirection;
 use Inane\Db\Query\Grammar\DatabaseGrammar;
+use Stringable;
 
-interface QueryBuilderInterface {
+interface QueryBuilderInterface extends Stringable {
     /**
      * Set the table which the query is targeting.
      *

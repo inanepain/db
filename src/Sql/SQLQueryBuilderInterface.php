@@ -25,13 +25,16 @@ declare(strict_types=1);
 namespace Inane\Db\Sql;
 
 use Stringable;
+
 use const null;
 
 /**
  * The Builder interface declares a set of methods to assemble an SQL query.
  *
- * All of the construction steps are returning the current builder object to
+ * All the construction steps are returning the current builder object to
  * allow chaining: $builder->select(...)->where(...)
+ *
+ * @deprecated Use QueryBuilder instead
  *
  * @version 1.0.0
  */

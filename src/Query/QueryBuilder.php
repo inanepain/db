@@ -36,6 +36,7 @@ use Inane\Db\Query\Grammar\{
     MySQLGrammar,
     PostgreSQLGrammar,
     SQLiteGrammar};
+
 use function array_fill;
 use function array_keys;
 use function array_map;
@@ -782,6 +783,17 @@ class QueryBuilder implements QueryBuilderInterface {
      */
     public function getBindings(): array {
         return $this->bindings;
+    }
+
+    /**
+     * Magic method {@see https://www.php.net/manual/en/language.oop5.magic.php#object.tostring}
+     * allows a class to decide how it will react when it is treated like a string.
+     *
+     * @return string Returns string representation of the object that
+     * implements this interface (and/or "__toString" magic method).
+     */
+    public function __toString(): string {
+        return $this->toSql();
     }
     #endregion Output
 }
