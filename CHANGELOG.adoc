@@ -22,12 +22,13 @@
 
 = 0.4.0-dev (2025 Xxx xx)
 :revnumber: 0.4.0
-:revdate: 2025-XX-XX
+:revdate: 2026-XX-XX
 
-* *update*: `Where` can handle basic strings and key => value arrays.
-* *update*: `AbstractTable` supports `Where` objects.
 * *new*: Added support to get a prepared statement with placeholders that can be executed with `key` => `value` data.
 * *new*: New improved query builder classes.
+* *update*: `Where` can handle basic strings and key => value arrays.
+* *update*: `AbstractTable` supports `Where` objects.
+* *update*: To latest `Stdlib`.
 
 :leveloffset!:
 :leveloffset: +2

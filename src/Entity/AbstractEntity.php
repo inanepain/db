@@ -30,11 +30,13 @@ use ReflectionObject;
 use Stringable;
 use Inane\Stdlib\{
     Converters\Arrayable,
+    Converters\JSONable,
+    Exception\JsonException,
     Json
 };
-use Inane\Stdlib\Converters\JSONable;
 
 use function array_key_exists;
+use function count;
 use function is_null;
 
 use const JSON_UNESCAPED_SLASHES;
@@ -211,10 +213,25 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     /**
      * Return JSON representation of data
      *
-     * @return array as JSON
+     * @return string as JSON
+     *
+     * @throws JsonException
      */
     public function toJSON(): string {
         return Json::encode($this->toArray());
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
+     * @return array data which can be serialized by <b>json_encode</b>, which is a value of any type other than a resource.
+     *
+     * @since 5.4
+     */
+    public function jsonSerialize(): array {
+        return $this->toArray();
     }
     #endregion Export Entity
 }
