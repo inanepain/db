@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\db
@@ -26,14 +26,13 @@ namespace Inane\Db\Entity;
 
 use Exception;
 use Inane\Db\Table\AbstractTable;
-use ReflectionObject;
-use Stringable;
 use Inane\Stdlib\{
     Converters\Arrayable,
     Converters\JSONable,
     Exception\JsonException,
-    Json
-};
+    Json};
+use ReflectionObject;
+use Stringable;
 
 use function array_key_exists;
 use function count;

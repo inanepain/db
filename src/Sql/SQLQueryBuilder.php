@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\db
@@ -29,6 +29,7 @@ use Inane\Stdlib\Options;
 
 use function serialize;
 use function unserialize;
+
 use const null;
 
 /**

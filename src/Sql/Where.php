@@ -5,7 +5,7 @@
  * Some helpers for database task and query construction.
  * $Id$
  * $Date$
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author   Philip Michael Raab<philip@cathedral.co.za>
  * @package  inanepain\db
@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Inane\Db\Sql;
 
 use Stringable;
+
 use function array_first;
 use function implode;
 use function is_array;

@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\db
@@ -30,6 +30,7 @@ use Inane\Db\Sql\MysqlSQLQueryBuilder;
 use Inane\Db\Sql\SQLQueryBuilderInterface;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
+
 use function array_intersect_key;
 use function implode;
 

@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\db
@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Inane\Db\Sql;
 
 use function is_null;
+
 use const null;
 
 /**
