@@ -132,7 +132,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
      * Saves the current entity to the database.
      *   Save makes use of the insertUpdate statement.
      *
-     * This method persists the current state of the entity to the database.
+     * This method persists/saves the current state of the entity to the database.
      * It returns a boolean indicating whether the save operation was successful.
      *
      * @return bool True if the entity was successfully saved, false otherwise.
@@ -157,14 +157,16 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     }
 
     /**
-     * Updates the entity's data with the provided array.
+     * Updates the object's properties with the provided data if the keys match.
      *
-     * @param array $data An associative array containing the data to update.
+     * @param array $data An associative array of data to update the object's properties.
      *
      * @return void
+     *
+     * @throws \RuntimeException If the property $data is not defined.
      */
     protected function updateData(array $data): void {
-        if (!isset($this->data)) throw new Exception('Error: property $data not defined.');
+        if (!isset($this->data)) throw new \RuntimeException('Error: property $data not defined.');
 
         foreach ($this->data as $key => $value) {
             if (array_key_exists($key, $data)) {
