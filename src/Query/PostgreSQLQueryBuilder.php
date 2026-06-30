@@ -24,6 +24,12 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query;
 
+/**
+ * Class PostgreSQLQueryBuilder
+ *
+ * A query builder specifically tailored for PostgreSQL databases. It extends the
+ * generic QueryBuilder class, leveraging PostgreSQL-specific syntax and features.
+ */
 class PostgreSQLQueryBuilder extends QueryBuilder {
     /**
      * PostgreSQLQueryBuilder constructor.

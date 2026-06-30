@@ -24,7 +24,17 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query;
 
+/**
+ * Class responsible for building SQL queries in ANSI-compliant mode.
+ */
 class ANSIQueryBuilder extends QueryBuilder {
+    /**
+     * Class constructor.
+     *
+     * Initialises the parent class with a specific database driver.
+     *
+     * @return void
+     */
     public function __construct() {
         parent::__construct(DatabaseDriver::ANSI);
     }

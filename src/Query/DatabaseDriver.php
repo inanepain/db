@@ -24,6 +24,9 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query;
 
+/**
+ * Represents the supported database driver types for database connections.
+ */
 enum DatabaseDriver: string {
     case MYSQL = 'mysql';
     case POSTGRESQL = 'pgsql';

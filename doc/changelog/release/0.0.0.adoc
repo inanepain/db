@@ -7,3 +7,4 @@
 * *update*: `Where` can handle basic strings and key => value arrays.
 * *update*: `AbstractTable` supports `Where` objects.
 * *update*: To latest `Stdlib`.
+* *update*: Removed deprecated `SQLQueryBuilder`.

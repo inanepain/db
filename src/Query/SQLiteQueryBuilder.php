@@ -24,6 +24,11 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query;
 
+/**
+ * Class SQLiteQueryBuilder
+ *
+ * Extends QueryBuilder specifically for SQLite database operations.
+ */
 class SQLiteQueryBuilder extends QueryBuilder {
     /**
      * SQLiteQueryBuilder constructor.

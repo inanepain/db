@@ -45,10 +45,15 @@ use function array_values;
 use function count;
 use function func_num_args;
 use function implode;
-use function in_array;
 use function is_array;
 use function strtoupper;
 
+/**
+ * Class QueryBuilder
+ *
+ * A class responsible for building database queries such as SELECT, INSERT, UPDATE, and DELETE.
+ * It manages query components like WHERE, JOIN, ORDER BY, GROUP BY, and others.
+ */
 class QueryBuilder implements QueryBuilderInterface {
     //#region Properties
     /** @var string|null The table which the query is targeting. */
@@ -102,6 +107,7 @@ class QueryBuilder implements QueryBuilderInterface {
     }
 
     #region Build Statement Methods
+
     /**
      * Build the SELECT query string.
      *
@@ -219,7 +225,10 @@ class QueryBuilder implements QueryBuilderInterface {
                 'in' => function() use ($where, $quotedColumn) {
                     $placeholders = array_fill(0, count($where->values), '?');
                     $wrappedValues = array_map(fn($val) => $this->grammar->wrapValue($val), $where->values);
-                    $this->bindings = [...$this->bindings, ...$wrappedValues];
+                    $this->bindings = [
+                        ...$this->bindings,
+                        ...$wrappedValues,
+                    ];
 
                     return $quotedColumn . ' IN (' . implode(', ', $placeholders) . ')';
                 },
@@ -351,6 +360,7 @@ class QueryBuilder implements QueryBuilderInterface {
     }
 
     #region Query Type
+
     /**
      * Set the columns to be selected.
      *
@@ -441,12 +451,13 @@ class QueryBuilder implements QueryBuilderInterface {
         $column = $condition['column'] ?? null;
         $boolean = strtoupper($condition['boolean'] ?? 'AND');
 
-        if ($column === null && !in_array($type, ['raw'])) {
+        if ($column === null && $type !== 'raw') {
             throw new \InvalidArgumentException('Column is required for where clause');
         }
 
         match ($type) {
-            'basic' => $this->wheres[] = new WhereClause(type: 'basic', column: $column, operator: $condition['operator'] ?? '=', value: $condition['value'] ?? null, boolean: $boolean),
+            'basic' => $this->wheres[] = new WhereClause(type   : 'basic', column: $column, operator: $condition['operator'] ?? '=', value: $condition['value'] ?? null,
+                                                         boolean: $boolean),
 
             'in' => $this->wheres[] = new WhereClause(type: 'in', column: $column, boolean: $boolean, values: $condition['values'] ?? []),
 
@@ -466,15 +477,24 @@ class QueryBuilder implements QueryBuilderInterface {
      * Add a basic where clause to the query.
      *
      * @param string $column
-     * @param mixed $operator
-     * @param mixed $value
+     * @param mixed  $operator
+     * @param mixed  $value
      *
      * @return self
      */
     public function where(string $column, mixed $operator = null, mixed $value = null): self {
-        [$operator, $value] = match (func_num_args()) {
-            2 => ['=', $operator],
-            default => [$operator, $value]
+        [
+            $operator,
+            $value,
+        ] = match (func_num_args()) {
+            2 => [
+                '=',
+                $operator,
+            ],
+            default => [
+                $operator,
+                $value,
+            ]
         };
 
         $this->wheres[] = new WhereClause(type: 'basic', column: $column, operator: $operator, value: $value, boolean: 'AND');
@@ -510,15 +530,24 @@ class QueryBuilder implements QueryBuilderInterface {
      * Add an OR where clause to the query.
      *
      * @param string $column
-     * @param mixed $operator
-     * @param mixed $value
+     * @param mixed  $operator
+     * @param mixed  $value
      *
      * @return self
      */
     public function orWhere(string $column, mixed $operator = null, mixed $value = null): self {
-        [$operator, $value] = match (func_num_args()) {
-            2 => ['=', $operator],
-            default => [$operator, $value]
+        [
+            $operator,
+            $value,
+        ] = match (func_num_args()) {
+            2 => [
+                '=',
+                $operator,
+            ],
+            default => [
+                $operator,
+                $value,
+            ]
         };
 
         $this->wheres[] = new WhereClause(type: 'basic', column: $column, operator: $operator, value: $value, boolean: 'OR');
@@ -530,7 +559,7 @@ class QueryBuilder implements QueryBuilderInterface {
      * Add a WHERE IN clause to the query.
      *
      * @param string $column
-     * @param array $values
+     * @param array  $values
      *
      * @return self
      */
@@ -584,7 +613,7 @@ class QueryBuilder implements QueryBuilderInterface {
      * Add a WHERE BETWEEN clause to the query.
      *
      * @param string $column
-     * @param array $values
+     * @param array  $values
      *
      * @return self
      */
@@ -603,8 +632,8 @@ class QueryBuilder implements QueryBuilderInterface {
     /**
      * Add a JOIN clause to the query.
      *
-     * @param string $table
-     * @param string $first
+     * @param string      $table
+     * @param string      $first
      * @param string|null $operator
      * @param string|null $second
      *
@@ -613,9 +642,18 @@ class QueryBuilder implements QueryBuilderInterface {
     public function join(
         string $table, string $first, ?string $operator = null, ?string $second = null,
     ): self {
-        [$operator, $second] = match (func_num_args()) {
-            3 => ['=', $operator],
-            default => [$operator, $second]
+        [
+            $operator,
+            $second,
+        ] = match (func_num_args()) {
+            3 => [
+                '=',
+                $operator,
+            ],
+            default => [
+                $operator,
+                $second,
+            ]
         };
 
         $this->joins[] = new JoinClause(type: JoinType::INNER, table: $table, first: $first, operator: $operator, second: $second);
@@ -626,8 +664,8 @@ class QueryBuilder implements QueryBuilderInterface {
     /**
      * Add a LEFT JOIN clause to the query.
      *
-     * @param string $table
-     * @param string $first
+     * @param string      $table
+     * @param string      $first
      * @param string|null $operator
      * @param string|null $second
      *
@@ -636,9 +674,18 @@ class QueryBuilder implements QueryBuilderInterface {
     public function leftJoin(
         string $table, string $first, ?string $operator = null, ?string $second = null,
     ): self {
-        [$operator, $second] = match (func_num_args()) {
-            3 => ['=', $operator],
-            default => [$operator, $second]
+        [
+            $operator,
+            $second,
+        ] = match (func_num_args()) {
+            3 => [
+                '=',
+                $operator,
+            ],
+            default => [
+                $operator,
+                $second,
+            ]
         };
 
         $this->joins[] = new JoinClause(type: JoinType::LEFT, table: $table, first: $first, operator: $operator, second: $second);
@@ -649,8 +696,8 @@ class QueryBuilder implements QueryBuilderInterface {
     /**
      * Add a RIGHT JOIN clause to the query.
      *
-     * @param string $table
-     * @param string $first
+     * @param string      $table
+     * @param string      $first
      * @param string|null $operator
      * @param string|null $second
      *
@@ -659,9 +706,18 @@ class QueryBuilder implements QueryBuilderInterface {
     public function rightJoin(
         string $table, string $first, ?string $operator = null, ?string $second = null,
     ): self {
-        [$operator, $second] = match (func_num_args()) {
-            3 => ['=', $operator],
-            default => [$operator, $second]
+        [
+            $operator,
+            $second,
+        ] = match (func_num_args()) {
+            3 => [
+                '=',
+                $operator,
+            ],
+            default => [
+                $operator,
+                $second,
+            ]
         };
 
         $this->joins[] = new JoinClause(type: JoinType::RIGHT, table: $table, first: $first, operator: $operator, second: $second);
@@ -674,7 +730,7 @@ class QueryBuilder implements QueryBuilderInterface {
     /**
      * Add an ORDER BY clause to the query.
      *
-     * @param string $column
+     * @param string                $column
      * @param OrderDirection|string $direction
      *
      * @return self
@@ -708,7 +764,7 @@ class QueryBuilder implements QueryBuilderInterface {
      *
      * @param string $column
      * @param string $operator
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return self
      */

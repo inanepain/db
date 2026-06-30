@@ -10,17 +10,17 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Db\Table;
 
@@ -29,18 +29,14 @@ use Inane\Db\Adapter\{
     AdapterInterface};
 use Inane\Db\Entity\AbstractEntity;
 use Inane\Db\Query\QueryBuilderInterface;
-use Inane\Db\Sql\{
-    SQLQueryBuilderInterface,
-    Where};
 use Inane\Stdlib\Array\OptionsInterface;
 
 use function array_first;
 use function array_key_exists;
 use function array_keys;
-use function explode;
 use function implode;
+use function is_array;
 use function is_numeric;
-use function is_string;
 
 use const false;
 use const null;
@@ -71,10 +67,10 @@ abstract class AbstractTable {
      */
     protected string $table;
 
-	/**
-	 * @var array<string, mixed> $columns An array to store the column and default values for a database table or similar structure.
-	 */
-	protected array $columns = [];
+    /**
+     * @var array<string, mixed> $columns An array to store the column and default values for a database table or similar structure.
+     */
+    protected array $columns = [];
 
     /**
      * @var string $primaryId The primary identifier for the table.
@@ -83,6 +79,7 @@ abstract class AbstractTable {
         get => $this->primaryId;
         set => $this->primaryId = $value;
     }
+
     /**
      * Indicates whether the primary key of the table should auto-increment.
      *
@@ -95,28 +92,19 @@ abstract class AbstractTable {
      */
     protected string $entityClass;
 
-	/**
-	 * Constructor for the AbstractTable class.
-	 *
-	 * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
-	 *
-	 * @throws \Exception
-	 */
+    /**
+     * Constructor for the AbstractTable class.
+     *
+     * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
+     *
+     * @throws \Exception
+     */
     public function __construct(null|array|OptionsInterface $config = null) {
         if (!isset(static::$db) && $config !== null) {
             static::$db = new Adapter($config);
         }
     }
-
-	#region Utility Methods
-	/**
-	 * Returns an instance of SQLQueryBuilderInterface.
-	 *
-	 * @return SQLQueryBuilderInterface Returns an instance of SQLQueryBuilderInterface.
-	 */
-	public function getQueryBuilder(): SQLQueryBuilderInterface {
-		return $this::$db->getDriver()->getQueryBuilder();
-	}
+    #region Utility Methods
 
     /**
      * Returns an instance of QueryBuilderInterface.
@@ -124,20 +112,23 @@ abstract class AbstractTable {
      * @return QueryBuilderInterface Returns an instance of QueryBuilderInterface.
      */
     public function queryBuilder(): QueryBuilderInterface {
-        return $this::$db->getDriver()->queryBuilder()->table($this->table);
+        return $this::$db->getDriver()
+            ->queryBuilder()
+            ->table($this->table)
+        ;
     }
-	#endregion Utility Methods
+    #endregion Utility Methods
 
-	#region Column Methods
-	/**
-	 * Retrieves the names of all columns.
-	 *
-	 * @return array An array containing the names of the columns.
-	 */
-	public function getColumns(): array {
-		return array_keys($this->columns);
-	}
-	#endregion Column Methods
+    #region Column Methods
+    /**
+     * Retrieves the names of all columns.
+     *
+     * @return array An array containing the names of the columns.
+     */
+    public function getColumns(): array {
+        return array_keys($this->columns);
+    }
+    #endregion Column Methods
 
     #region database table methods
     /**
@@ -158,11 +149,17 @@ abstract class AbstractTable {
      */
     public function fetchAll(): array {
         if (!array_key_exists(__FUNCTION__, $this->statement))
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare('SELECT '. implode(', ', $this->getColumns()) .' FROM `' . $this->table . '`');
+            $this->statement[__FUNCTION__] = static::$db->getDriver()
+                ->prepare('SELECT ' . implode(', ', $this->getColumns()) . ' FROM `' . $this->table . '`')
+            ;
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute();
-        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
+
+        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [
+            null,
+            $this,
+        ]);
     }
 
     /**
@@ -174,15 +171,24 @@ abstract class AbstractTable {
      */
     public function fetch(string|int|float $id): false|AbstractEntity {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
-            $query = $this->queryBuilder()->select()->where($this->primaryId, '=', ':id')->toSql();
-            $stmt = static::$db->getDriver()->prepare($query);
+            $query = $this->queryBuilder()
+                ->select()
+                ->where($this->primaryId, '=', ':id')
+                ->toSql()
+            ;
+            $stmt = static::$db->getDriver()
+                ->prepare($query)
+            ;
             $this->statement[__FUNCTION__] = $stmt;
         }
 
         $stmt = $this->statement[__FUNCTION__];
         $stmt->execute([$id]);
 
-        $result = $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
+        $result = $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [
+            null,
+            $this,
+        ]);
         if (empty($result)) return false;
         else return array_first($result);
     }
@@ -195,44 +201,23 @@ abstract class AbstractTable {
      * @return array|AbstractEntity[] The search results as an array.
      */
     public function find(array $conditions): array {
-        $qb = $this->queryBuilder()->select();
+        $qb = $this->queryBuilder()
+            ->select()
+        ;
 
         if (!is_array(array_first($conditions))) $conditions = [$conditions];
         $qb->wheres($conditions);
 
         // Use query builder to prepare the statement with placeholders
-        $stmt = static::$db->getDriver()->prepare($qb->toSql());
+        $stmt = static::$db->getDriver()
+            ->prepare($qb->toSql())
+        ;
         $stmt->execute($qb->getBindings());
-        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
-    }
 
-    /**
-     * Searches the database based on the given query.
-     *
-     * @deprecated Use find() instead.
-     *
-     * @param array|string $query The search query, which can be either an array or a string.
-     *
-     * @return array|AbstractEntity[] The search results as an array.
-     */
-    public function search(array|Where|string $query): array {
-        $qb = $this->getQueryBuilder()->select($this->table);
-
-        if ($query instanceof Where) {
-            $qb->whereReplace($query);
-        } elseif (!is_string($query)) {
-            foreach ($query as $key => $value) {
-                $qb->where($key, $value, 'like');
-            }
-        } else {
-            [$field, $operator, $value] = explode(' ', $query, 3);
-            $qb->where($field, $value, $operator);
-        }
-
-        // Use query builder to prepare the statement with placeholders
-        $stmt = static::$db->getDriver()->prepare($qb->prepare());
-        $stmt->execute($qb->getKeyValueData());
-        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [null, $this]);
+        return $stmt->fetchAll(static::$db->getDriver()::FETCH_CLASS, $this->entityClass, [
+            null,
+            $this,
+        ]);
     }
 
     /**
@@ -246,17 +231,20 @@ abstract class AbstractTable {
         $array = $entity->getArrayCopy(true);
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
             $insKeys = $updKeys = [];
-            foreach (array_keys($array) as $key) {
+            foreach(array_keys($array) as $key) {
                 if ($key !== $this->primaryId) $updKeys[] = "$key = excluded.$key";
                 $insKeys[] = $key;
             }
 
-            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $insKeys) . '") VALUES (:' . implode(', :', $insKeys) . ') ON CONFLICT(' . $this->primaryId . ') DO UPDATE SET ' . implode(', ', $updKeys) . ';';
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
+            $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $insKeys) . '") VALUES (:' . implode(', :',
+                    $insKeys) . ') ON CONFLICT(' . $this->primaryId . ') DO UPDATE SET ' . implode(', ', $updKeys) . ';';
+            $this->statement[__FUNCTION__] = static::$db->getDriver()
+                ->prepare($sql)
+            ;
         }
 
         $data = [];
-        foreach ($array as $key => $value) {
+        foreach($array as $key => $value) {
             $data[":$key"] = $value;
         }
 
@@ -264,7 +252,9 @@ abstract class AbstractTable {
         if ($stmt->execute($data) === false)
             return false;
 
-        $id = static::$db->getDriver()->lastInsertId();
+        $id = static::$db->getDriver()
+            ->lastInsertId()
+        ;
         $id = is_numeric($id) ? (int)$id : $id;
 
         return $this->fetch($id);
@@ -283,11 +273,13 @@ abstract class AbstractTable {
             $keys = array_keys($array);
 
             $sql = 'INSERT INTO `' . $this->table . '` ("' . implode('", "', $keys) . '") VALUES (:' . implode(', :', $keys) . ')';
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
+            $this->statement[__FUNCTION__] = static::$db->getDriver()
+                ->prepare($sql)
+            ;
         }
 
         $data = [];
-        foreach ($array as $key => $value) {
+        foreach($array as $key => $value) {
             $data[":$key"] = $value;
         }
 
@@ -295,7 +287,9 @@ abstract class AbstractTable {
         if ($stmt->execute($data) === false)
             return false;
 
-        $id = static::$db->getDriver()->lastInsertId();
+        $id = static::$db->getDriver()
+            ->lastInsertId()
+        ;
         $id = is_numeric($id) ? (int)$id : $id;
 
         return $this->fetch($id);
@@ -311,22 +305,23 @@ abstract class AbstractTable {
     public function update(AbstractEntity $entity): false|AbstractEntity {
         $array = $entity->getArrayCopy(false);
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
-
             $keys = [];
-            foreach ($array as $key => $value) {
+            foreach($array as $key => $value) {
                 $keys[] = "`$key` = :$key";
             }
 
             $keys = implode(', ', $keys);
 
-            $sql  = "UPDATE `" . $this->table . "` SET $keys WHERE " . $entity->primaryId . " = :" . $entity->primaryId;
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
+            $sql = 'UPDATE `' . $this->table . "` SET $keys WHERE " . $entity->primaryId . ' = :' . $entity->primaryId;
+            $this->statement[__FUNCTION__] = static::$db->getDriver()
+                ->prepare($sql)
+            ;
         }
 
         $stmt = $this->statement[__FUNCTION__];
 
         $data = [];
-        foreach ($array as $key => $value) {
+        foreach($array as $key => $value) {
             $data[":$key"] = $value;
         }
         $data[':' . $entity->primaryId] = $entity->getPrimaryIdValue();
@@ -343,12 +338,13 @@ abstract class AbstractTable {
      */
     public function delete(AbstractEntity $entity): bool {
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
-            $sql  = "DELETE FROM `" . $this->table . "` WHERE " . $entity->primaryId . " = :" . $entity->primaryId;
-            $this->statement[__FUNCTION__] = static::$db->getDriver()->prepare($sql);
+            $sql = 'DELETE FROM `' . $this->table . '` WHERE ' . $entity->primaryId . ' = :' . $entity->primaryId;
+            $this->statement[__FUNCTION__] = static::$db->getDriver()
+                ->prepare($sql)
+            ;
         }
 
         return $this->statement[__FUNCTION__]->execute([':' . $entity->primaryId => $entity->getPrimaryIdValue()]);
     }
-
     #endregion
 }

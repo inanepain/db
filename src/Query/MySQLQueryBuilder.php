@@ -24,6 +24,11 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query;
 
+/**
+ * Class MySQLQueryBuilder
+ *
+ * Provides functionality for building MySQL-specific SQL queries.
+ */
 class MySQLQueryBuilder extends QueryBuilder {
     /**
      * MySQLQueryBuilder constructor.

@@ -22,14 +22,16 @@
 
 declare(strict_types=1);
 
-namespace Inane\Db\Sql;
+namespace Inane\Db\Entity;
 
+use Attribute;
+
+#[Attribute(Attribute::TARGET_METHOD)]
 /**
- * This Concrete Builder is compatible with SQLite.
+ * Class EntityBeforeSaveMethod
  *
- * For the currently supported options we can inherit directly from Postgres.
- *
- * @version 1.0.0
+ * Represents a method used to prepare or process entity data before it is persisted.
+ * This class may include logic for sanitizing, validating, or transforming entity properties.
  */
-class SqliteSQLQueryBuilder extends PostgresQueryBuilder {
+class EntityBeforeSaveMethod {
 }

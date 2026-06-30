@@ -54,7 +54,11 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     /**
      * @var string $primaryId The primary identifier for the entity, default is 'id'.
      */
-    public string $primaryId = 'id';
+    public string $primaryId = 'id' {
+        get {
+            return $this->primaryId;
+        }
+    }
 
     /**
      * @var array $data An array to hold the data for the entity.
@@ -88,17 +92,6 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
         elseif (isset($this->dataTableClass)) $this->dataTable = new $this->dataTableClass;
 
         if (isset($this->dataTable)) $this->primaryId = $this->dataTable->primaryId;
-    }
-
-    /**
-     * Retrieves the primary ID of the entity.
-     *
-     * @deprecated Use primaryId property instead.
-     *
-     * @return string The primary ID of the entity.
-     */
-    public function getPrimaryId(): string {
-        return $this->primaryId;
     }
 
     /**
@@ -140,7 +133,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     public function save(): bool {
         $reflection = new ReflectionObject($this);
         foreach ($reflection->getMethods() as $method) {
-            $attributes = $method->getAttributes(EntityPrepareMethod::class);
+            $attributes = $method->getAttributes(EntityBeforeSaveMethod::class);
 
             if (count($attributes) > 0) {
                 $methodName = $method->getName();

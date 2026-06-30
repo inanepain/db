@@ -24,9 +24,30 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query\Clause;
 
+/**
+ * Supported SQL query operation types.
+ *
+ * Defines the primary SQL statement categories understood by the query builder
+ * when selecting the compiler path for generated database queries.
+ */
 enum QueryType: string {
+    /**
+     * Retrieve rows from a database table or expression.
+     */
     case SELECT = 'SELECT';
+
+    /**
+     * Insert one or more rows into a database table.
+     */
     case INSERT = 'INSERT';
+
+    /**
+     * Update existing rows in a database table.
+     */
     case UPDATE = 'UPDATE';
+
+    /**
+     * Delete existing rows from a database table.
+     */
     case DELETE = 'DELETE';
 }

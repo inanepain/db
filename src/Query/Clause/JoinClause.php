@@ -24,15 +24,25 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query\Clause;
 
+/**
+ * Immutable value object describing a SQL JOIN clause.
+ *
+ * Stores the join type, target table, and comparison parts required to compile
+ * a database join expression such as `INNER JOIN users ON posts.user_id = users.id`.
+ */
 readonly class JoinClause {
     /**
-     * JoinClause constructor.
+     * Create a join clause definition.
      *
-     * @param JoinType $type
-     * @param string $table
-     * @param string $first
-     * @param string $operator
-     * @param string $second
+     * @param JoinType $type     The SQL join type to apply.
+     * @param string   $table    The table being joined to the query.
+     * @param string   $first    The left-hand column or expression for the join comparison.
+     * @param string   $operator The comparison operator used between both join expressions.
+     * @param string   $second   The right-hand column or expression for the join comparison.
+     *
+     * @return void
+     *
+     * @throws \InvalidArgumentException If any join clause value is invalid.
      */
     public function __construct(
         public JoinType $type,
@@ -41,5 +51,6 @@ readonly class JoinClause {
         public string $operator,
         public string $second
     ) {
+        // Constructor property promotion assigns all immutable join metadata.
     }
 }
