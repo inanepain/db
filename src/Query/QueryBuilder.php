@@ -36,6 +36,8 @@ use Inane\Db\Query\Grammar\{
     MySQLGrammar,
     PostgreSQLGrammar,
     SQLiteGrammar};
+use InvalidArgumentException;
+use RuntimeException;
 
 use function array_fill;
 use function array_keys;
@@ -141,7 +143,7 @@ class QueryBuilder implements QueryBuilderInterface {
         $sql .= ' (' . implode(', ', $quotedColumns) . ')';
         $sql .= ' VALUES (';
 
-        $placeholders = array_map(fn() => '?', $this->data);
+        $placeholders = array_map(static fn() => '?', $this->data);
         $this->bindings = array_map(fn($val) => $this->grammar->wrapValue($val), array_values($this->data));
 
         $sql .= implode(', ', $placeholders) . ')';
@@ -238,8 +240,8 @@ class QueryBuilder implements QueryBuilderInterface {
 
                     return $quotedColumn . ' BETWEEN ? AND ?';
                 },
-                'null' => fn() => $quotedColumn . ' IS NULL',
-                'not_null' => fn() => $quotedColumn . ' IS NOT NULL',
+                'null' => static fn() => $quotedColumn . ' IS NULL',
+                'not_null' => static fn() => $quotedColumn . ' IS NOT NULL',
             };
 
             $conditions[] = $boolean . $condition();
@@ -319,7 +321,7 @@ class QueryBuilder implements QueryBuilderInterface {
 
     #region Database Driver
     /**
-     * Set the database driver and initialize the grammar.
+     * Set the database driver and initialise the grammar.
      *
      * @param DatabaseDriver $driver
      *
@@ -427,7 +429,7 @@ class QueryBuilder implements QueryBuilderInterface {
         $count = count($condition);
 
         if ($count < 2 || $count > 4) {
-            throw new \InvalidArgumentException('Condition array must have 2-4 elements: [column, value] or [column, operator, value] or [column, operator, value, boolean]');
+            throw new InvalidArgumentException('Condition array must have 2-4 elements: [column, value] or [column, operator, value] or [column, operator, value, boolean]');
         }
 
         // Extract values with defaults
@@ -452,7 +454,7 @@ class QueryBuilder implements QueryBuilderInterface {
         $boolean = strtoupper($condition['boolean'] ?? 'AND');
 
         if ($column === null && $type !== 'raw') {
-            throw new \InvalidArgumentException('Column is required for where clause');
+            throw new InvalidArgumentException('Column is required for where clause');
         }
 
         match ($type) {
@@ -469,7 +471,7 @@ class QueryBuilder implements QueryBuilderInterface {
 
             'between' => $this->wheres[] = new WhereClause(type: 'between', column: $column, boolean: $boolean, values: $condition['values'] ?? []),
 
-            default => throw new \InvalidArgumentException("Unsupported where type: $type")
+            default => throw new InvalidArgumentException("Unsupported where type: $type")
         };
     }
 
@@ -512,7 +514,7 @@ class QueryBuilder implements QueryBuilderInterface {
     public function wheres(array $conditions): self {
         foreach($conditions as $condition) {
             if (!is_array($condition)) {
-                throw new \InvalidArgumentException('Each condition must be an array');
+                throw new InvalidArgumentException('Each condition must be an array');
             }
             // Check if it's an associative array with 'type' key
             if (isset($condition['type'])) {
@@ -619,7 +621,7 @@ class QueryBuilder implements QueryBuilderInterface {
      */
     public function whereBetween(string $column, array $values): self {
         if (count($values) !== 2) {
-            throw new \InvalidArgumentException('whereBetween requires exactly 2 values');
+            throw new InvalidArgumentException('whereBetween requires exactly two values');
         }
 
         $this->wheres[] = new WhereClause(type: 'between', column: $column, boolean: 'AND', values: $values);
@@ -815,11 +817,11 @@ class QueryBuilder implements QueryBuilderInterface {
      */
     public function toSql(): string {
         if ($this->table === null) {
-            throw new \RuntimeException('Table not specified');
+            throw new RuntimeException('Table not specified');
         }
 
         if ($this->type === null) {
-            throw new \RuntimeException('Query type not specified');
+            throw new RuntimeException('Query type not specified');
         }
 
         $this->bindings = [];

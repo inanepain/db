@@ -24,6 +24,9 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query\Grammar;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 /**
  * Abstract class for defining database grammar.
  *
@@ -42,7 +45,7 @@ abstract class DatabaseGrammar {
      *
      * @return string The quoted identifier.
      *
-     * @throws \InvalidArgumentException If the identifier cannot be quoted.
+     * @throws InvalidArgumentException If the identifier cannot be quoted.
      */
     abstract public function quoteIdentifier(string $identifier): string;
 
@@ -54,7 +57,7 @@ abstract class DatabaseGrammar {
      *
      * @return string The compiled pagination SQL fragment.
      *
-     * @throws \InvalidArgumentException If the limit or offset values are invalid.
+     * @throws InvalidArgumentException If the limit or offset values are invalid.
      */
     abstract public function compileLimit(int $limit, ?int $offset): string;
 
@@ -63,7 +66,7 @@ abstract class DatabaseGrammar {
      *
      * @return string The SQL expression or clause used to retrieve the inserted ID.
      *
-     * @throws \RuntimeException If the database grammar cannot provide an inserted ID expression.
+     * @throws RuntimeException If the database grammar cannot provide an inserted ID expression.
      */
     abstract public function compileInsertGetId(): string;
 
@@ -72,7 +75,7 @@ abstract class DatabaseGrammar {
      *
      * @return bool True when native booleans are supported, otherwise false.
      *
-     * @throws \RuntimeException If boolean support cannot be determined.
+     * @throws RuntimeException If boolean support cannot be determined.
      */
     abstract public function supportsBooleans(): bool;
 
@@ -86,10 +89,10 @@ abstract class DatabaseGrammar {
      *
      * @return mixed The original value, or an integer boolean surrogate when needed.
      *
-     * @throws \RuntimeException If boolean support cannot be determined.
+     * @throws RuntimeException If boolean support cannot be determined.
      */
     public function wrapValue(mixed $value): mixed {
-        // Convert booleans only when the active grammar cannot bind them natively.
+        // Convert booleans only when the active grammar can't bind them natively.
         if (is_bool($value) && !$this->supportsBooleans()) {
             return $value ? 1 : 0;
         }

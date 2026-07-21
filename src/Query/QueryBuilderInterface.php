@@ -253,7 +253,7 @@ interface QueryBuilderInterface extends Stringable {
     public function getBindings(): array;
 
     /**
-     * Set the database driver and initialize the grammar.
+     * Set the database driver and initialise the grammar.
      *
      * @param DatabaseDriver $driver
      *

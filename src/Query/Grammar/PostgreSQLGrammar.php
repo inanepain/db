@@ -24,6 +24,9 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query\Grammar;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 use function array_map;
 use function explode;
 use function implode;
@@ -46,7 +49,7 @@ class PostgreSQLGrammar extends DatabaseGrammar {
      *
      * @return string The quoted identifier, with wildcard parts left unchanged.
      *
-     * @throws \InvalidArgumentException If the provided identifier is invalid or cannot be quoted.
+     * @throws InvalidArgumentException If the provided identifier is invalid or cannot be quoted.
      */
     public function quoteIdentifier(string $identifier): string {
         // Quote each identifier segment independently to preserve table.column notation.
@@ -63,7 +66,7 @@ class PostgreSQLGrammar extends DatabaseGrammar {
      *
      * @return string The compiled PostgreSQL pagination SQL fragment.
      *
-     * @throws \InvalidArgumentException If the limit or offset values are invalid.
+     * @throws InvalidArgumentException If the limit or offset values are invalid.
      */
     public function compileLimit(int $limit, ?int $offset): string {
         // PostgreSQL allows LIMIT on its own and OFFSET as an additional clause.
@@ -80,7 +83,7 @@ class PostgreSQLGrammar extends DatabaseGrammar {
      *
      * @return string The PostgreSQL RETURNING clause for the inserted primary key.
      *
-     * @throws \RuntimeException If the inserted ID clause cannot be provided.
+     * @throws RuntimeException If the inserted ID clause cannot be provided.
      */
     public function compileInsertGetId(): string {
         return 'RETURNING id';
@@ -91,7 +94,7 @@ class PostgreSQLGrammar extends DatabaseGrammar {
      *
      * @return bool True because PostgreSQL has native boolean support.
      *
-     * @throws \RuntimeException If boolean support cannot be determined.
+     * @throws RuntimeException If boolean support cannot be determined.
      */
     public function supportsBooleans(): bool {
         return true;

@@ -24,6 +24,9 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Query\Grammar;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 /**
  * Class ANSIGrammar
  *
@@ -40,7 +43,7 @@ class ANSIGrammar extends DatabaseGrammar {
      *
      * @return string The quoted identifier, with each part properly wrapped in double quotes, except wildcards.
      *
-     * @throws \InvalidArgumentException If the provided identifier is invalid or empty.
+     * @throws InvalidArgumentException If the provided identifier is invalid or empty.
      */
     public function quoteIdentifier(string $identifier): string {
         $parts = explode('.', $identifier);
@@ -55,7 +58,7 @@ class ANSIGrammar extends DatabaseGrammar {
      *
      * @return string The compiled SQL query fragment with the specified limit and optional offset.
      *
-     * @throws \InvalidArgumentException If the provided limit is less than or equal to zero.
+     * @throws InvalidArgumentException If the provided limit is less than or equal to zero.
      */
     public function compileLimit(int $limit, ?int $offset): string {
         if ($offset !== null) {
@@ -69,7 +72,7 @@ class ANSIGrammar extends DatabaseGrammar {
      *
      * @return string The compiled SQL insert statement designed to return the inserted record's ID.
      *
-     * @throws \RuntimeException If the method fails to generate a valid SQL statement.
+     * @throws RuntimeException If the method fails to generate a valid SQL statement.
      */
     public function compileInsertGetId(): string {
         return '';
@@ -80,7 +83,7 @@ class ANSIGrammar extends DatabaseGrammar {
      *
      * @return bool True if boolean data types are supported, false otherwise.
      *
-     * @throws \RuntimeException If the method is called in an unsupported context.
+     * @throws RuntimeException If the method is called in an unsupported context.
      */
     public function supportsBooleans(): bool {
         return false;

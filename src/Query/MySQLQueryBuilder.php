@@ -34,6 +34,6 @@ class MySQLQueryBuilder extends QueryBuilder {
      * MySQLQueryBuilder constructor.
      */
     public function __construct() {
-        parent::__construct(DatabaseDriver::MYSQL);
+        parent::__construct();
     }
 }
