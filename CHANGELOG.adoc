@@ -20,7 +20,7 @@
 
 :leveloffset: +2
 
-= 0.4.0-dev (2025 Xxx xx)
+= 0.4.0-dev (2026 Xxx xx)
 :revnumber: 0.4.0
 :revdate: 2026-XX-XX
 
@@ -29,6 +29,8 @@
 * *update*: `Where` can handle basic strings and key => value arrays.
 * *update*: `AbstractTable` supports `Where` objects.
 * *update*: To latest `Stdlib`.
+* *update*: Removed deprecated `SQLQueryBuilder`.
+* *new*: Add `PHPUnit` tests.
 
 :leveloffset!:
 :leveloffset: +2
