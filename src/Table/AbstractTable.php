@@ -95,7 +95,7 @@ abstract class AbstractTable {
     /**
      * Constructor for the AbstractTable class.
      *
-     * @param OptionsInterface|array|null $config Optional array of data to initialize the entity.
+     * @param OptionsInterface|array|null $config Optional array of data to initialise the entity.
      *
      * @throws \Exception
      */

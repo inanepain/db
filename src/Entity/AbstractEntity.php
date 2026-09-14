@@ -82,7 +82,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     /**
      * Constructor for the AbstractEntity class.
      *
-     * @param array|null $data Optional array of data to initialize the entity.
+     * @param array|null $data Optional array of data to initialise the entity.
      *
      * @throws Exception
      */
