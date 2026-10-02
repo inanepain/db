@@ -45,6 +45,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.5",
+        "ext-pdo": "*",
         "inanepain/stdlib": "* || dev-master || dev-develop"
     },
     "require-dev": {},
