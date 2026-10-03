@@ -36,7 +36,6 @@ use Stringable;
 
 use function array_key_exists;
 use function count;
-use function is_null;
 
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
@@ -87,8 +86,8 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
      * @throws Exception
      */
     public function __construct(?array $data = null, ?AbstractTable $dataTable = null) {
-        if (!is_null($data)) $this->updateData($data);
-        if (!is_null($dataTable)) $this->dataTable = $dataTable;
+        if ($data) $this->updateData($data);
+        if ($dataTable) $this->dataTable = $dataTable;
         elseif (isset($this->dataTableClass)) $this->dataTable = new $this->dataTableClass;
 
         if (isset($this->dataTable)) $this->primaryId = $this->dataTable->primaryId;
