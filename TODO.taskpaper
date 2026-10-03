@@ -1,2 +1,3 @@
 Inane/db:
-  Some helpers for database task and query construction.
+	Some helpers for database task and query construction.
+	- git-attributes
