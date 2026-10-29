@@ -3,7 +3,7 @@
     "description": "Some helpers for database task and query construction.",
     "type": "library",
     "license": "Unlicense",
-    "homepage": "https://git.cathedral.co.za:3000/inanepain/db",
+    "homepage": "https://github.com/inanepain/db",
     "readme": "README.adoc",
     "authors": [
         {
@@ -14,15 +14,19 @@
     ],
     "support": {
         "email": "philip@cathedral.co.za",
-        "issues": "https://git.cathedral.co.za:3000/inanepain/db/issues"
+        "issues": "https://github.com/inanepain/db/issues"
     },
     "keywords": [
         "inane",
+        "inanepain",
+        "dal",
+        "dao",
         "db",
         "database",
         "sql",
         "query",
         "builder",
+        "SQLite",
         "MySQL",
         "PostgresSQL"
     ],
@@ -46,9 +50,11 @@
     "require": {
         "php": ">=8.5",
         "ext-pdo": "*",
-        "inanepain/stdlib": "* || dev-master || dev-develop"
+        "inanepain/stdlib": ">= 0.11.0 || dev-master || dev-develop"
     },
-    "require-dev": {},
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
     "scripts": {
         "mk-doc-dir": [
             "mkdir -p doc/{changelog,readme}",
@@ -59,32 +65,17 @@
             "touch doc/readme/part/install.adoc"
         ],
         "build": [
-            "echo \"Library: inanepain/$(basename $(pwd))\"",
-            "echo build: all...",
+            "echo build: doc: db",
             "@build-changelog",
             "@build-readme",
-            "echo build: done!"
-        ],
-        "build-win": [
-            "@build-changelog-win",
-            "@build-readme-win"
+            "echo doc: db: built"
         ],
         "build-changelog": [
             "echo building: changelog...",
-            "rm -f CHANGELOG.adoc",
-            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc"
-        ],
-        "build-changelog-win": [
-            "del CHANGELOG.adoc",
             "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc"
         ],
         "build-readme": [
             "echo building: readme...",
-            "rm -f README.adoc",
-            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc"
-        ],
-        "build-readme-win": [
-            "del README.adoc",
             "asciidoctor-reducer -o README.adoc doc/readme/index.adoc"
         ]
     }

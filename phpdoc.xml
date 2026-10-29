@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpdocumentor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.phpdoc.org" configVersion="3"
+               xsi:schemaLocation="https://www.phpdoc.org https://docs.phpdoc.org/latest/phpdoc.xsd">
+    <title>Inane\Db</title>
+    <paths>
+        <output>doc/api</output>
+        <cache>.phpdoc</cache>
+    </paths>
+    <version number="0.3.0">
+        <api>
+            <source dsn=".">
+                <path>src/</path>
+                <path>tests/</path>
+            </source>
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+            <visibility>api</visibility>
+            <visibility>internal</visibility>
+            <visibility>private</visibility>
+            <visibility>protected</visibility>
+            <visibility>public</visibility>
+            <default-package-name>inanepain/db</default-package-name>
+            <include-source>true</include-source>
+            <markers>
+                <marker>DEBUG</marker>
+                <marker>HACK</marker>
+                <marker>TODO</marker>
+                <marker>BUG</marker>
+                <marker>FIXME</marker>
+                <marker>FIX</marker>
+                <marker>NOTE</marker>
+                <marker>DELETE</marker>
+            </markers>
+        </api>
+    </version>
+    <setting name="graphs.enabled" value="true"/>
+    <setting name="guides.enabled" value="true"/>
+    <!-- <template name="string" location="string"> -->
+    <!--Zero or more repetitions:-->
+    <!-- <parameter name="string" value="string"/> -->
+    <!-- </template> -->
+</phpdocumentor>
