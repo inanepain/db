@@ -16,8 +16,6 @@
  *
  * @license  UNLICENSE
  * @license  https://unlicense.org/UNLICENSE UNLICENSE
- *
- * _version_ $version
  */
 
 declare(strict_types = 1);
