@@ -38,6 +38,24 @@ git-push-all: (_start "Push All") && (_done "Push All")
 
 #endregion git
 
+#region Servers
+# PlantUML Server
+[group: 'server']
+[arg('action', pattern='start|stop', help="Start or Stop server.")]
+serve-plantuml action='start':
+    #!/usr/bin/env zsh
+    if [[ "{{action}}" = "start" ]]; then
+    	echo "\tPlantUML: {{GREEN}}{{action}}ting...{{NORMAL}}"
+        launchctl load /Users/philip/Library/LaunchAgents/local.blackbetty.plantuml.plist
+    fi
+
+    if [[ "{{action}}" = "stop" ]]; then
+        echo "\tPlantUML: {{RED}}{{action}}ting...{{NORMAL}}"
+        launchctl unload /Users/philip/Library/LaunchAgents/local.blackbetty.plantuml.plist
+    fi
+
+#endregion Servers
+
 #region documentation
 # create or update all documentation.
 [group: 'doc']
@@ -46,18 +64,22 @@ build-doc: (_start "Doc: ALL") && build-phpdoc build-asciidoc (_done "Doc: ALL")
 # generate php part (v2) (all, cache, html)
 [group: 'doc']
 build-phpdoc: (_start "PHPDoc: API") && (_done "PHPDoc: API")
-	#!/usr/bin/env zsh
-	if [ -d .phpdoc ]; then
-		echo "\tCleaning: cache..."
-		rm -fr .phpdoc
-	fi
-	if [ ! -z doc/api ]; then
-		echo "\tCleaning: api doc..."
-		rm  doc/api
-	fi
+    #!/usr/bin/env zsh
+    if [ -d .phpdoc ]; then
+        echo "\tCleaning: cache..."
+        rm -fr .phpdoc
+    fi
+    if [ ! -z doc/api ]; then
+        echo "\tCleaning: api doc..."
+        rm  doc/api
+    fi
 
-	phpdoc -d src -t .phpdoc --title="{{project}}" --defaultpackagename="Inane"
-	ln -s $(realpath .phpdoc) doc/api
+    just serve-plantuml "start"
+
+    phpdoc -d src -t .phpdoc --title="{{project}}" --defaultpackagename="Inane"
+    ln -s $(realpath .phpdoc) doc/api
+
+    just serve-plantuml "stop"
 
 # compile asciidoc source into final files.
 [group: 'doc']
