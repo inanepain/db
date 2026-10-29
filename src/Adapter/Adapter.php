@@ -22,10 +22,10 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Adapter;
 
-use Exception;
 use Inane\Db\Adapter\Driver\DriverInterface;
 use Inane\Db\Adapter\Driver\MysqlDriver;
 use Inane\Db\Adapter\Driver\SqliteDriver;
+use Inane\Db\Exception\RuntimeException;
 use Inane\Db\Query\DatabaseDriver;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
@@ -49,13 +49,13 @@ class Adapter implements AdapterInterface {
      *                                               for initializing the adapter.
      */
     public function __construct(array|Options|OptionsInterface $config = []) {
-        // Set the adapter to the appropriate class based on the driver
+        // Set the adapter to the appropriate class based on the driver.
         if ($config['driver'] === DatabaseDriver::SQLITE->value) {
             $this->driver = new SqliteDriver($config);
         } elseif ($config['driver'] === DatabaseDriver::MYSQL->value) {
             $this->driver = new MysqlDriver($config);
         } else {
-            throw new Exception('Unsupported driver: ' . $config['driver']);
+            throw new RuntimeException('Unsupported driver: ' . $config['driver']);
         }
         // Constructor code can be added here if needed
     } // __construct
