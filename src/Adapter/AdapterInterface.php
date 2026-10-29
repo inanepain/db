@@ -10,15 +10,15 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Db\Adapter;
 

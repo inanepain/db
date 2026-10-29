@@ -10,17 +10,19 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
 
 namespace Inane\Db\Query\Clause;
+
+use InvalidArgumentException;
 
 /**
  * Represents a SQL WHERE clause for use in query building.
@@ -34,11 +36,11 @@ namespace Inane\Db\Query\Clause;
  * @param string     $operator The comparison operator for the clause (e.g., '=', '!=', '<', etc.).
  * @param mixed      $value    The comparison value for single-value clauses.
  * @param string     $boolean  The boolean connector (e.g., AND, OR) used to join this clause with others.
- * @param array|null $values   The list of values for multi-value clauses like IN or BETWEEN.
+ * @param null|array $values   The list of values for multi-value clauses like IN or BETWEEN.
  *
  * @return void
  *
- * @throws \InvalidArgumentException If the provided values for the clause are invalid.
+ * @throws InvalidArgumentException If the provided values for the clause are invalid.
  */
 readonly class WhereClause {
     /**
@@ -49,19 +51,18 @@ readonly class WhereClause {
      * @param string     $operator The comparison operator used by the clause.
      * @param mixed      $value    The comparison value for single-value clauses.
      * @param string     $boolean  The boolean connector used to join this clause to previous clauses.
-     * @param array|null $values   The value list for multi-value clauses, such as IN or BETWEEN.
+     * @param null|array $values   The value list for multi-value clauses, such as IN or BETWEEN.
      *
      * @return void
      *
-     * @throws \InvalidArgumentException If any where clause value is invalid.
+     * @throws InvalidArgumentException If any where clause value is invalid.
      */
     public function __construct(
         public string $type,
         public string $column,
         public string $operator = '=',
-        public mixed $value = null,
+        public mixed  $value = null,
         public string $boolean = 'AND',
-        public ?array $values = null
-    ) {
-    }
+        public ?array $values = null,
+    ) {}
 }

@@ -10,20 +10,19 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Db\Adapter\Driver;
 
 use Inane\Db\Query\QueryBuilderInterface;
-use Inane\Db\Sql\SQLQueryBuilderInterface;
 
 /**
  * Driver Interface
@@ -31,13 +30,6 @@ use Inane\Db\Sql\SQLQueryBuilderInterface;
  * @version 1.0.0
  */
 interface DriverInterface {
-	/**
-	 * Retrieves an instance of the SQLQueryBuilderInterface.
-	 *
-	 * @return SQLQueryBuilderInterface An instance of a class implementing SQLQueryBuilderInterface.
-	 */
-	public function getQueryBuilder(): SQLQueryBuilderInterface;
-
     /**
      * Retrieves an instance of the QueryBuilderInterface.
      *

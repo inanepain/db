@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Inane\Db\Table;
 
+use Exception;
 use Inane\Db\Adapter\{
     Adapter,
     AdapterInterface};
@@ -93,9 +94,9 @@ abstract class AbstractTable {
     /**
      * Constructor for the AbstractTable class.
      *
-     * @param OptionsInterface|array|null $config Optional array of data to initialise the entity.
+     * @param null|OptionsInterface|array $config Optional array of data to initialise the entity.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(null|array|OptionsInterface $config = null) {
         if (!isset(static::$db) && $config !== null) {
@@ -188,7 +189,8 @@ abstract class AbstractTable {
             $this,
         ]);
         if (empty($result)) return false;
-        else return array_first($result);
+
+        return array_first($result);
     }
 
     /**
@@ -226,7 +228,7 @@ abstract class AbstractTable {
      * @return false|AbstractEntity Returns the entity on success, or false on failure.
      */
     public function insertUpdate(AbstractEntity $entity): false|AbstractEntity {
-        $array = $entity->getArrayCopy(true);
+        $array = $entity->getArrayCopy();
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
             $insKeys = $updKeys = [];
             foreach(array_keys($array) as $key) {
@@ -241,21 +243,7 @@ abstract class AbstractTable {
             ;
         }
 
-        $data = [];
-        foreach($array as $key => $value) {
-            $data[":$key"] = $value;
-        }
-
-        $stmt = $this->statement[__FUNCTION__];
-        if ($stmt->execute($data) === false)
-            return false;
-
-        $id = static::$db->getDriver()
-            ->lastInsertId()
-        ;
-        $id = is_numeric($id) ? (int)$id : $id;
-
-        return $this->fetch($id);
+        return $this->statementCache($array, __FUNCTION__);
     }
 
     /**
@@ -266,7 +254,7 @@ abstract class AbstractTable {
      * @return false|AbstractEntity Returns the inserted entity on success, or false on failure.
      */
     public function insert(AbstractEntity $entity): false|AbstractEntity {
-        $array = $entity->getArrayCopy(true);
+        $array = $entity->getArrayCopy();
         if (!array_key_exists(__FUNCTION__, $this->statement)) {
             $keys = array_keys($array);
 
@@ -276,21 +264,7 @@ abstract class AbstractTable {
             ;
         }
 
-        $data = [];
-        foreach($array as $key => $value) {
-            $data[":$key"] = $value;
-        }
-
-        $stmt = $this->statement[__FUNCTION__];
-        if ($stmt->execute($data) === false)
-            return false;
-
-        $id = static::$db->getDriver()
-            ->lastInsertId()
-        ;
-        $id = is_numeric($id) ? (int)$id : $id;
-
-        return $this->fetch($id);
+        return $this->statementCache($array, __FUNCTION__);
     }
 
     /**
@@ -345,4 +319,29 @@ abstract class AbstractTable {
         return $this->statement[__FUNCTION__]->execute([':' . $entity->primaryId => $entity->getPrimaryIdValue()]);
     }
     #endregion
+
+    /**
+     * Executes a prepared statement using cached queries and binds data for execution.
+     *
+     * @param array  $array    An associative array of data to bind to the query placeholders.
+     * @param string $cacheKey The identifier for the cached prepared statement.
+     *
+     * @return AbstractEntity|false The fetched entity on successful execution or false on failure.
+     */
+    protected function statementCache(array $array, string $cacheKey): AbstractEntity|false {
+        $data = [];
+        foreach($array as $key => $value) {
+            $data[":$key"] = $value;
+        }
+
+        $stmt = $this->statement[$cacheKey];
+        if ($stmt->execute($data) === false) return false;
+
+        $id = static::$db->getDriver()
+            ->lastInsertId()
+        ;
+        $id = is_numeric($id) ? (int)$id : $id;
+
+        return $this->fetch($id);
+    }
 }

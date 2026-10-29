@@ -56,10 +56,10 @@ use function strtoupper;
  */
 class QueryBuilder implements QueryBuilderInterface {
     //#region Properties
-    /** @var string|null The table which the query is targeting. */
+    /** @var null|string The table which the query is targeting. */
     private ?string $table = null;
 
-    /** @var QueryType|null The query type. */
+    /** @var null|QueryType The query type. */
     private ?QueryType $type = null;
 
     /** @var array The columns to be selected. */
@@ -80,10 +80,10 @@ class QueryBuilder implements QueryBuilderInterface {
     /** @var array The HAVING clauses. */
     private array $having = [];
 
-    /** @var int|null The limit for the query. */
+    /** @var null|int The limit for the query. */
     private ?int $limit = null;
 
-    /** @var int|null The offset for the query. */
+    /** @var null|int The offset for the query. */
     private ?int $offset = null;
 
     /** @var array The data for INSERT or UPDATE. */
@@ -347,7 +347,7 @@ class QueryBuilder implements QueryBuilderInterface {
     #endregion Database Driver
 
     /**
-     * Set the table which the query is targeting.
+     * Set the table that the query is targeting.
      *
      * @param string $table
      *
@@ -556,7 +556,7 @@ class QueryBuilder implements QueryBuilderInterface {
     }
 
     /**
-     * Add a WHERE IN clause to the query.
+     * Add a `WHERE IN` clause to the query.
      *
      * @param string $column
      * @param array  $values
@@ -570,7 +570,7 @@ class QueryBuilder implements QueryBuilderInterface {
     }
 
     /**
-     * Add a WHERE IS NULL clause to the query.
+     * Add a `WHERE IS NULL` clause to the query.
      *
      * @param string $column
      *
@@ -634,8 +634,8 @@ class QueryBuilder implements QueryBuilderInterface {
      *
      * @param string      $table
      * @param string      $first
-     * @param string|null $operator
-     * @param string|null $second
+     * @param null|string $operator
+     * @param null|string $second
      *
      * @return self
      */
@@ -666,8 +666,8 @@ class QueryBuilder implements QueryBuilderInterface {
      *
      * @param string      $table
      * @param string      $first
-     * @param string|null $operator
-     * @param string|null $second
+     * @param null|string $operator
+     * @param null|string $second
      *
      * @return self
      */
@@ -698,8 +698,8 @@ class QueryBuilder implements QueryBuilderInterface {
      *
      * @param string      $table
      * @param string      $first
-     * @param string|null $operator
-     * @param string|null $second
+     * @param null|string $operator
+     * @param null|string $second
      *
      * @return self
      */

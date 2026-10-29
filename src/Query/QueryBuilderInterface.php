@@ -10,12 +10,12 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
@@ -31,7 +31,7 @@ use Stringable;
  */
 interface QueryBuilderInterface extends Stringable {
     /**
-     * Set the table which the query is targeting.
+     * Set the table that the query is targeting.
      *
      * @param string $table
      *
@@ -77,8 +77,8 @@ interface QueryBuilderInterface extends Stringable {
      * Add a basic where clause to the query.
      *
      * @param string $column
-     * @param mixed $operator
-     * @param mixed $value
+     * @param mixed  $operator
+     * @param mixed  $value
      *
      * @return self
      */
@@ -97,25 +97,25 @@ interface QueryBuilderInterface extends Stringable {
      * Add an OR where clause to the query.
      *
      * @param string $column
-     * @param mixed $operator
-     * @param mixed $value
+     * @param mixed  $operator
+     * @param mixed  $value
      *
      * @return self
      */
     public function orWhere(string $column, mixed $operator = null, mixed $value = null): self;
 
     /**
-     * Add a WHERE IN clause to the query.
+     * Add a `WHERE IN` clause to the query.
      *
      * @param string $column
-     * @param array $values
+     * @param array  $values
      *
      * @return self
      */
     public function whereIn(string $column, array $values): self;
 
     /**
-     * Add a WHERE IS NULL clause to the query.
+     * Add a `WHERE IS NULL` clause to the query.
      *
      * @param string $column
      *
@@ -146,7 +146,7 @@ interface QueryBuilderInterface extends Stringable {
      * Add a WHERE BETWEEN clause to the query.
      *
      * @param string $column
-     * @param array $values
+     * @param array  $values
      *
      * @return self
      */
@@ -155,10 +155,10 @@ interface QueryBuilderInterface extends Stringable {
     /**
      * Add a JOIN clause to the query.
      *
-     * @param string $table
-     * @param string $first
-     * @param string|null $operator
-     * @param string|null $second
+     * @param string      $table
+     * @param string      $first
+     * @param null|string $operator
+     * @param null|string $second
      *
      * @return self
      */
@@ -167,10 +167,10 @@ interface QueryBuilderInterface extends Stringable {
     /**
      * Add a LEFT JOIN clause to the query.
      *
-     * @param string $table
-     * @param string $first
-     * @param string|null $operator
-     * @param string|null $second
+     * @param string      $table
+     * @param string      $first
+     * @param null|string $operator
+     * @param null|string $second
      *
      * @return self
      */
@@ -179,10 +179,10 @@ interface QueryBuilderInterface extends Stringable {
     /**
      * Add a RIGHT JOIN clause to the query.
      *
-     * @param string $table
-     * @param string $first
-     * @param string|null $operator
-     * @param string|null $second
+     * @param string      $table
+     * @param string      $first
+     * @param null|string $operator
+     * @param null|string $second
      *
      * @return self
      */
@@ -191,7 +191,7 @@ interface QueryBuilderInterface extends Stringable {
     /**
      * Add an ORDER BY clause to the query.
      *
-     * @param string $column
+     * @param string                $column
      * @param OrderDirection|string $direction
      *
      * @return self
@@ -212,7 +212,7 @@ interface QueryBuilderInterface extends Stringable {
      *
      * @param string $column
      * @param string $operator
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return self
      */

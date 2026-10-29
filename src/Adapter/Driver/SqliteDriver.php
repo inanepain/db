@@ -24,8 +24,6 @@ namespace Inane\Db\Adapter\Driver;
 
 use Inane\Db\Query\QueryBuilderInterface;
 use Inane\Db\Query\SQLiteQueryBuilder;
-use Inane\Db\Sql\SqliteSQLQueryBuilder;
-use Inane\Db\Sql\SQLQueryBuilderInterface;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
 
@@ -35,20 +33,18 @@ use Inane\Stdlib\Options;
  * @version 1.0.0
  */
 class SqliteDriver extends AbstractDriver {
+    /**
+     * Constructor method for initialising the database connection.
+     *
+     * @param array|Options|OptionsInterface $config Configuration data, including database name under the key 'dbname'.
+     *
+     * @return void
+     */
     public function __construct(array|Options|OptionsInterface $config = []) {
         $dsn = 'sqlite:' . $config['dbname'];
 
         parent::__construct($dsn);
     } // __construct
-
-	/**
-	 * Returns an instance of SQLQueryBuilderInterface.
-	 *
-	 * @return SQLQueryBuilderInterface Returns an instance of SQLQueryBuilderInterface.
-	 */
-	public function getQueryBuilder(): SQLQueryBuilderInterface {
-		return new SqliteSQLQueryBuilder();
-	}
 
     /**
      * Retrieves an instance of the QueryBuilderInterface.

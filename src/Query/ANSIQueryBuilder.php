@@ -23,7 +23,7 @@ declare(strict_types = 1);
 namespace Inane\Db\Query;
 
 /**
- * Class responsible for building SQL queries in ANSI-compliant mode.
+ * Class responsible for building SQL queries in The ANSI-compliant mode.
  */
 class ANSIQueryBuilder extends QueryBuilder {
     /**

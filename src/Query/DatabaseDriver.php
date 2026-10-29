@@ -10,12 +10,12 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
@@ -32,21 +32,18 @@ enum DatabaseDriver: string {
      * Used for MySQL and compatible engines that share the same SQL dialect.
      */
     case MYSQL = 'mysql';
-
     /**
      * PostgreSQL database driver.
      *
      * Used when query generation must account for PostgreSQL-specific syntax.
      */
     case POSTGRESQL = 'pgsql';
-
     /**
      * SQLite database driver.
      *
      * Used for file-backed or in-memory SQLite database connections.
      */
     case SQLITE = 'sqlite';
-
     /**
      * ANSI SQL driver.
      *

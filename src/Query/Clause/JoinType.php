@@ -10,12 +10,12 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
@@ -33,17 +33,14 @@ enum JoinType: string {
      * Match rows where both joined tables satisfy the join condition.
      */
     case INNER = 'INNER';
-
     /**
      * Return all rows from the left table and matching rows from the joined table.
      */
     case LEFT = 'LEFT';
-
     /**
      * Return all rows from the joined table and matching rows from the left table.
      */
     case RIGHT = 'RIGHT';
-
     /**
      * Return the Cartesian product of both joined tables.
      */

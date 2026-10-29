@@ -10,12 +10,12 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
@@ -45,6 +45,7 @@ class ANSIGrammar extends DatabaseGrammar {
      */
     public function quoteIdentifier(string $identifier): string {
         $parts = explode('.', $identifier);
+
         return implode('.', array_map(static fn($p) => $p === '*' ? $p : "\"$p\"", $parts));
     }
 
@@ -52,7 +53,7 @@ class ANSIGrammar extends DatabaseGrammar {
      * Compiles a SQL query fragment to apply a row limit and optional offset for fetching records.
      *
      * @param int      $limit  The maximum number of rows to fetch.
-     * @param int|null $offset The starting point for fetching rows, or null if no offset is needed.
+     * @param null|int $offset The starting point for fetching rows, or null if no offset is needed.
      *
      * @return string The compiled SQL query fragment with the specified limit and optional offset.
      *
@@ -62,6 +63,7 @@ class ANSIGrammar extends DatabaseGrammar {
         if ($offset !== null) {
             return " OFFSET $offset ROWS FETCH NEXT $limit ROWS ONLY";
         }
+
         return " FETCH FIRST $limit ROWS ONLY";
     }
 

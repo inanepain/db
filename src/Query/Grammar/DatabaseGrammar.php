@@ -10,12 +10,12 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
@@ -51,7 +51,7 @@ abstract class DatabaseGrammar {
      * Compile the database-specific LIMIT/OFFSET SQL fragment.
      *
      * @param int      $limit  The maximum number of rows to return.
-     * @param int|null $offset The optional number of rows to skip.
+     * @param null|int $offset The optional number of rows to skip.
      *
      * @return string The compiled pagination SQL fragment.
      *

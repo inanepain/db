@@ -10,19 +10,22 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Db\Adapter;
 
+use Exception;
 use Inane\Db\Adapter\Driver\DriverInterface;
+use Inane\Db\Adapter\Driver\MysqlDriver;
+use Inane\Db\Adapter\Driver\SqliteDriver;
 use Inane\Db\Query\DatabaseDriver;
 use Inane\Stdlib\Array\OptionsInterface;
 use Inane\Stdlib\Options;
@@ -42,19 +45,18 @@ class Adapter implements AdapterInterface {
      * Constructor for the Adapter class.
      *
      * @param array|Options|OptionsInterface $config Optional configuration settings for the adapter.
-     *                       This array can include various parameters required
-     *                       for initializing the adapter.
+     *                                               This array can include various parameters required
+     *                                               for initializing the adapter.
      */
     public function __construct(array|Options|OptionsInterface $config = []) {
         // Set the adapter to the appropriate class based on the driver
         if ($config['driver'] === DatabaseDriver::SQLITE->value) {
-            $this->driver = new \Inane\Db\Adapter\Driver\SqliteDriver($config);
+            $this->driver = new SqliteDriver($config);
         } elseif ($config['driver'] === DatabaseDriver::MYSQL->value) {
-            $this->driver = new \Inane\Db\Adapter\Driver\MysqlDriver($config);
+            $this->driver = new MysqlDriver($config);
         } else {
-            throw new \Exception('Unsupported driver: ' . $config['driver']);
+            throw new Exception('Unsupported driver: ' . $config['driver']);
         }
-
         // Constructor code can be added here if needed
     } // __construct
 

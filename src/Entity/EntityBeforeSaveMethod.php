@@ -10,15 +10,15 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Db\Entity;
 
@@ -29,7 +29,6 @@ use Attribute;
  * Class EntityBeforeSaveMethod
  *
  * Represents a method used to prepare or process entity data before it is persisted.
- * This class may include logic for sanitizing, validating, or transforming entity properties.
+ * This class may include logic for sanitising, validating, or transforming entity properties.
  */
-class EntityBeforeSaveMethod {
-}
+class EntityBeforeSaveMethod {}

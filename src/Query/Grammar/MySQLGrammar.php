@@ -10,12 +10,12 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
@@ -47,6 +47,7 @@ class MySQLGrammar extends DatabaseGrammar {
      */
     public function quoteIdentifier(string $identifier): string {
         $parts = explode('.', $identifier);
+
         return implode('.', array_map(static fn($p) => $p === '*' ? $p : "`$p`", $parts));
     }
 
@@ -54,7 +55,7 @@ class MySQLGrammar extends DatabaseGrammar {
      * Compile a MySQL LIMIT clause with an optional OFFSET clause.
      *
      * @param int      $limit  The maximum number of rows to return.
-     * @param int|null $offset The optional number of rows to skip.
+     * @param null|int $offset The optional number of rows to skip.
      *
      * @return string The compiled MySQL pagination SQL fragment.
      *
@@ -66,6 +67,7 @@ class MySQLGrammar extends DatabaseGrammar {
         if ($offset !== null) {
             $sql .= " OFFSET $offset";
         }
+
         return $sql;
     }
 

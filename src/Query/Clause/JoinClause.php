@@ -10,17 +10,19 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 declare(strict_types = 1);
 
 namespace Inane\Db\Query\Clause;
+
+use InvalidArgumentException;
 
 /**
  * Immutable value object describing a SQL JOIN clause.
@@ -40,14 +42,14 @@ readonly class JoinClause {
      *
      * @return void
      *
-     * @throws \InvalidArgumentException If any join clause value is invalid.
+     * @throws InvalidArgumentException If any join clause value is invalid.
      */
     public function __construct(
         public JoinType $type,
-        public string $table,
-        public string $first,
-        public string $operator,
-        public string $second
+        public string   $table,
+        public string   $first,
+        public string   $operator,
+        public string   $second,
     ) {
         // Constructor property promotion assigns all immutable join metadata.
     }

@@ -10,15 +10,15 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@inane.co.za>
- * @package inanepain\db
+ * @author   Philip Michael Raab<philip@inane.co.za>
+ * @package  inanepain\db
  * @category db
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Db\Entity;
 
@@ -79,7 +79,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     /**
      * Constructor for the AbstractEntity class.
      *
-     * @param array|null $data Optional array of data to initialise the entity.
+     * @param null|array $data Optional array of data to initialise the entity.
      *
      * @throws Exception
      */
@@ -112,6 +112,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
 
         if ($result !== false) {
             $this->updateData($result->toArray());
+
             return true;
         }
 
@@ -129,7 +130,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
      */
     public function save(): bool {
         $reflection = new ReflectionObject($this);
-        foreach ($reflection->getMethods() as $method) {
+        foreach($reflection->getMethods() as $method) {
             $attributes = $method->getAttributes(EntityBeforeSaveMethod::class);
 
             if (count($attributes) > 0) {
@@ -140,6 +141,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
 
         if ($result = $this->dataTable->insertUpdate($this)) {
             $this->updateData($result->toArray());
+
             return true;
         }
 
@@ -158,7 +160,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     protected function updateData(array $data): void {
         if (!isset($this->data)) throw new \RuntimeException('Error: property $data not defined.');
 
-        foreach ($this->data as $key => $value) {
+        foreach($this->data as $key => $value) {
             if (array_key_exists($key, $data)) {
                 $this->$key = $data[$key];
             }
@@ -166,6 +168,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
     }
 
     #region Export Entity
+
     /**
      * Returns an array representation of the entity.
      *
@@ -175,7 +178,7 @@ abstract class AbstractEntity implements Arrayable, Stringable, JSONable {
      */
     public function getArrayCopy(bool $withPrimary = true): array {
         $data = [];
-        foreach ($this->data as $key => $value) {
+        foreach($this->data as $key => $value) {
             if (!$withPrimary && $key === $this->primaryId) continue;
             $data[$key] = $value;
         }
